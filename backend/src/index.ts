@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import { buildSchema } from 'type-graphql'
 import { AuthResolver } from './resolvers/auth.resolver.js'
+import { expressMiddleware } from '@as-integrations/express5'
 
 async function bootstrap() {
   const app = express()
@@ -26,7 +27,7 @@ async function bootstrap() {
 
   await server.start()
 
-  app.use('/graphql', express.json())
+  app.use('/graphql', express.json(), expressMiddleware(server))
 
   app.listen(
     {
