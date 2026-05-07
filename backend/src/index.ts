@@ -1,9 +1,12 @@
+import 'dotenv/config'
+import 'reflect-metadata'
 import { ApolloServer } from '@apollo/server'
 import express from 'express'
 import cors from 'cors'
 import { buildSchema } from 'type-graphql'
 import { AuthResolver } from './resolvers/auth.resolver.js'
 import { expressMiddleware } from '@as-integrations/express5'
+import { UserResolver } from './resolvers/user.resolver.js'
 
 async function bootstrap() {
   const app = express()
@@ -16,7 +19,7 @@ async function bootstrap() {
   )
 
   const schema = await buildSchema({
-    resolvers: [AuthResolver],
+    resolvers: [AuthResolver, UserResolver],
     validate: false,
     emitSchemaFile: './schema.graphql',
   })
