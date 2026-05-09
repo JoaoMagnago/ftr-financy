@@ -6,11 +6,79 @@ datasource db {
   provider = "sqlite"
 }
 
+enum TransactionType {
+  EXPENSE
+  REVENUE
+}
+
+enum CategoryIcon {
+  BRIEFCASE
+  CAR
+  HEALTH
+  PIGGY_BANK
+  SHOPPING_CART
+  TICKET
+  TOOLS
+  FOOD
+  PET
+  HOUSE
+  GIFT
+  EXERCISE
+  BOOK
+  BAGGAGE
+  MAIL
+  RECEIPT
+}
+
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+  categories   Category[]
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  date        DateTime        @default(now())
+  amount      Decimal
+  description String?
+  type        TransactionType
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([categoryId])
+  @@index([date])
+  @@index([type])
+}
+
+model Category {
+  id    String       @id @default(uuid())
+  name  String
+  icon  CategoryIcon
+  color String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
 }
