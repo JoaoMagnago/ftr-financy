@@ -1,9 +1,11 @@
 import 'dotenv/config'
 import 'reflect-metadata'
+
 import { ApolloServer } from '@apollo/server'
 import express from 'express'
 import cors from 'cors'
 import { buildSchema } from 'type-graphql'
+
 import { AuthResolver } from './resolvers/auth.resolver.js'
 import { expressMiddleware } from '@as-integrations/express5'
 import { UserResolver } from './resolvers/user.resolver.js'
