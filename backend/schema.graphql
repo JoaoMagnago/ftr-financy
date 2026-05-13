@@ -3,6 +3,20 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input CreateTransactionInput {
+  amount: String!
+  categoryId: String!
+  date: DateTimeISO!
+  description: String
+  type: String!
+}
+
+input CreateUserInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
 """
@@ -20,6 +34,8 @@ type LoginOutput {
 }
 
 type Mutation {
+  createTransaction(data: CreateTransactionInput!): TransactionModel!
+  createUser(data: CreateUserInput!): UserModel!
   login(data: LoginInput!): LoginOutput!
   register(data: RegisterInput!): RegisterOutput!
 }
@@ -38,6 +54,18 @@ type RegisterOutput {
   refreshToken: String!
   token: String!
   user: UserModel!
+}
+
+type TransactionModel {
+  amount: String!
+  categoryId: String!
+  createdAt: DateTimeISO!
+  date: DateTimeISO!
+  description: String
+  id: ID!
+  type: String!
+  updatedAt: DateTimeISO!
+  userId: String!
 }
 
 type UserModel {

@@ -46,7 +46,7 @@ model User {
 model Transaction {
   id          String          @id @default(uuid())
   date        DateTime        @default(now())
-  amount      Decimal
+  amount      String
   description String?
   type        TransactionType
 

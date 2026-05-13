@@ -10,7 +10,7 @@ export class CreateTransactionInput {
   amount!: string
 
   @Field(() => String, { nullable: true })
-  description: string | undefined
+  description?: string
 
   @Field(() => String)
   categoryId!: string

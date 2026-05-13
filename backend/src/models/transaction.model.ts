@@ -13,7 +13,7 @@ export class TransactionModel {
   amount!: string
 
   @Field(() => String, { nullable: true })
-  description: string | undefined
+  description!: string | null
 
   @Field(() => String)
   userId!: string
