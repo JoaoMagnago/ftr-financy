@@ -4,7 +4,10 @@ import { IsAuth } from '../middlewares/auth.middleware.js'
 import { UserModel } from '../models/user.model.js'
 import { CategoryModel } from '../models/category.model.js'
 import { CategoryService } from '../services/category.service.js'
-import { CreateCategoryInput } from '../dtos/input/category.input.js'
+import {
+  CreateCategoryInput,
+  UpdateCategoryInput,
+} from '../dtos/input/category.input.js'
 
 @Resolver(() => CategoryModel)
 @UseMiddleware(IsAuth)
@@ -17,5 +20,14 @@ export class CategoryResolver {
     @GqlUser() user: UserModel,
   ): Promise<CategoryModel> {
     return this.categoryService.createCategory(data, user.id)
+  }
+
+  @Mutation(() => CategoryModel)
+  async updateCategory(
+    @Arg('id', () => String) id: string,
+    @Arg('data', () => UpdateCategoryInput) data: UpdateCategoryInput,
+    @GqlUser() user: UserModel,
+  ): Promise<CategoryModel> {
+    return this.categoryService.updateCategory(id, user.id, data)
   }
 }
