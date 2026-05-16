@@ -53,7 +53,10 @@ async function bootstrap() {
       port: 4000,
     },
     () => {
-      console.log(`Servidor iniciado na porta 4000`)
+      console.log(`Servidor iniciado na porta http://localhost:4000`)
+      console.log(
+        `GraphQL Playground disponível em http://localhost:4000/graphql`,
+      )
     },
   )
 }

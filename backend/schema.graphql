@@ -56,10 +56,13 @@ type Mutation {
   createUser(data: CreateUserInput!): UserModel!
   login(data: LoginInput!): LoginOutput!
   register(data: RegisterInput!): RegisterOutput!
+  updateCategory(data: UpdateCategoryInput!, id: String!): CategoryModel!
 }
 
 type Query {
   getUser(id: String!): UserModel!
+  listCategories: [CategoryModel!]!
+  listTransactions: [TransactionModel!]!
 }
 
 input RegisterInput {
@@ -84,6 +87,13 @@ type TransactionModel {
   type: String!
   updatedAt: DateTimeISO!
   userId: String!
+}
+
+input UpdateCategoryInput {
+  color: String
+  description: String
+  icon: String
+  name: String
 }
 
 type UserModel {

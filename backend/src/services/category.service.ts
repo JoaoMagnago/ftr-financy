@@ -33,9 +33,17 @@ export class CategoryService {
       where: { id },
       data: {
         name: data.name,
-        description: data.description ?? null,
+        description: data.description,
         icon: data.icon,
         color: data.color,
+        userId,
+      },
+    })
+  }
+
+  async listCategories(userId: string) {
+    return prismaClient.category.findMany({
+      where: {
         userId,
       },
     })

@@ -14,4 +14,12 @@ export class TransactionService {
       },
     })
   }
+
+  async listTransactions(userId: string) {
+    return prismaClient.transaction.findMany({
+      where: {
+        userId,
+      },
+    })
+  }
 }
