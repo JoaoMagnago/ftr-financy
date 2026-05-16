@@ -31,6 +31,14 @@ export class CategoryResolver {
     return this.categoryService.updateCategory(id, user.id, data)
   }
 
+  @Mutation(() => Boolean)
+  async deleteCategory(
+    @Arg('id', () => String) id: string,
+    @GqlUser() user: UserModel,
+  ): Promise<boolean> {
+    return this.categoryService.deleteCategory(id, user.id)
+  }
+
   @Query(() => [CategoryModel])
   async listCategories(@GqlUser() user: UserModel): Promise<CategoryModel[]> {
     return this.categoryService.listCategories(user.id)

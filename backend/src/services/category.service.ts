@@ -60,4 +60,23 @@ export class CategoryService {
 
     return category
   }
+
+  async deleteCategory(id: string, userId: string) {
+    const category = await prismaClient.category.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!category) throw new Error('Categoria não existe')
+
+    if (category?.userId !== userId)
+      throw new Error('Usuário não possui permissão para deletar a categoria')
+
+    const deletedCategory = await prismaClient.category.delete({
+      where: { id },
+    })
+
+    return true
+  }
 }

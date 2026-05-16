@@ -54,6 +54,7 @@ type Mutation {
   createCategory(data: CreateCategoryInput!): CategoryModel!
   createTransaction(data: CreateTransactionInput!): TransactionModel!
   createUser(data: CreateUserInput!): UserModel!
+  deleteCategory(id: String!): Boolean!
   login(data: LoginInput!): LoginOutput!
   register(data: RegisterInput!): RegisterOutput!
   updateCategory(data: UpdateCategoryInput!, id: String!): CategoryModel!
