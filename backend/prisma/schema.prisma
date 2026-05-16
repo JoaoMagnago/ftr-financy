@@ -46,7 +46,7 @@ model User {
 model Transaction {
   id          String          @id @default(uuid())
   date        DateTime        @default(now())
-  amount      String
+  amount      Int
   description String?
   type        TransactionType
 
@@ -54,7 +54,7 @@ model Transaction {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

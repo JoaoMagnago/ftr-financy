@@ -42,6 +42,14 @@ export class TransactionResolver {
     return this.transactionService.updateTransaction(id, user.id, data)
   }
 
+  @Mutation(() => Boolean)
+  async deleteTransaction(
+    @Arg('id', () => String) id: string,
+    @GqlUser() user: UserModel,
+  ): Promise<boolean> {
+    return this.transactionService.deleteTransaction(id, user.id)
+  }
+
   @Query(() => [TransactionModel])
   async listTransactions(
     @GqlUser() user: UserModel,

@@ -54,4 +54,23 @@ export class TransactionService {
       },
     })
   }
+
+  async deleteTransaction(id: string, userId: string) {
+    const transaction = await prismaClient.transaction.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!transaction) throw new Error('Transação não existe')
+
+    if (transaction?.userId !== userId)
+      throw new Error('Usuário não possui permissão para deletar a transação')
+
+    await prismaClient.transaction.delete({
+      where: { id },
+    })
+
+    return true
+  }
 }

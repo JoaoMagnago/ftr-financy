@@ -73,7 +73,7 @@ export class CategoryService {
     if (category?.userId !== userId)
       throw new Error('Usuário não possui permissão para deletar a categoria')
 
-    const deletedCategory = await prismaClient.category.delete({
+    await prismaClient.category.delete({
       where: { id },
     })
 
