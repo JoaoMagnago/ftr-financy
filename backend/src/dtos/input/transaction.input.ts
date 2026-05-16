@@ -10,11 +10,29 @@ export class CreateTransactionInput {
   amount!: string
 
   @Field(() => String, { nullable: true })
-  description?: string
+  description?: string | null
 
   @Field(() => String)
   categoryId!: string
 
   @Field(() => Date)
   date!: Date
+}
+
+@InputType()
+export class UpdateTransactionInput {
+  @Field(() => String, { nullable: true })
+  type?: TransactionType
+
+  @Field(() => String, { nullable: true })
+  amount?: string
+
+  @Field(() => String, { nullable: true })
+  description?: string | null
+
+  @Field(() => String, { nullable: true })
+  categoryId?: string
+
+  @Field(() => Date, { nullable: true })
+  date?: Date
 }
