@@ -48,4 +48,17 @@ export class CategoryService {
       },
     })
   }
+
+  async findCategory(id: string) {
+    console.log(id)
+    const category = await prismaClient.category.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!category) throw new Error('Categoria não existe')
+
+    return category
+  }
 }

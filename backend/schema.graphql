@@ -79,6 +79,7 @@ type RegisterOutput {
 
 type TransactionModel {
   amount: String!
+  category: CategoryModel!
   categoryId: String!
   createdAt: DateTimeISO!
   date: DateTimeISO!
