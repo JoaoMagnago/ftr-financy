@@ -21,13 +21,11 @@ export class CategoryService {
     const category = await prismaClient.category.findUnique({
       where: {
         id,
+        userId,
       },
     })
 
     if (!category) throw new Error('Categoria não encontrada')
-
-    if (category?.userId !== userId)
-      throw new Error('Usuário não possui permissão para alterar a categoria')
 
     return prismaClient.category.update({
       where: { id },
@@ -65,13 +63,11 @@ export class CategoryService {
     const category = await prismaClient.category.findUnique({
       where: {
         id,
+        userId,
       },
     })
 
-    if (!category) throw new Error('Categoria não existe')
-
-    if (category?.userId !== userId)
-      throw new Error('Usuário não possui permissão para deletar a categoria')
+    if (!category) throw new Error('Categoria não encontrada')
 
     await prismaClient.category.delete({
       where: { id },

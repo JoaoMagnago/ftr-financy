@@ -6,6 +6,15 @@ import { prismaClient } from '../infra/database/prisma.js'
 
 export class TransactionService {
   async createTransaction(data: CreateTransactionInput, userId: string) {
+    const category = await prismaClient.category.findUnique({
+      where: {
+        id: data.categoryId,
+        userId,
+      },
+    })
+
+    if (!category) throw new Error('Categoria não encontrada')
+
     return prismaClient.transaction.create({
       data: {
         type: data.type,
@@ -26,13 +35,11 @@ export class TransactionService {
     const transaction = await prismaClient.transaction.findUnique({
       where: {
         id,
+        userId,
       },
     })
 
     if (!transaction) throw new Error('Transação não encontrada')
-
-    if (transaction?.userId !== userId)
-      throw new Error('Usuário não possui permissão para alterar a transação')
 
     return prismaClient.transaction.update({
       where: { id },
@@ -59,13 +66,11 @@ export class TransactionService {
     const transaction = await prismaClient.transaction.findUnique({
       where: {
         id,
+        userId,
       },
     })
 
-    if (!transaction) throw new Error('Transação não existe')
-
-    if (transaction?.userId !== userId)
-      throw new Error('Usuário não possui permissão para deletar a transação')
+    if (!transaction) throw new Error('Transação não encontrada')
 
     await prismaClient.transaction.delete({
       where: { id },
