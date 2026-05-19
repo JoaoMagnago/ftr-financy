@@ -6,8 +6,8 @@ export class CreateTransactionInput {
   @Field(() => String)
   type!: TransactionType
 
-  @Field(() => String)
-  amount!: string
+  @Field(() => Number)
+  amount!: number
 
   @Field(() => String, { nullable: true })
   description?: string | null
@@ -24,8 +24,8 @@ export class UpdateTransactionInput {
   @Field(() => String, { nullable: true })
   type?: TransactionType
 
-  @Field(() => String, { nullable: true })
-  amount?: string
+  @Field(() => Number, { nullable: true })
+  amount?: number
 
   @Field(() => String, { nullable: true })
   description?: string | null

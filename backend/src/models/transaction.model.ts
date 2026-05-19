@@ -9,8 +9,8 @@ export class TransactionModel {
   @Field(() => String)
   type!: TransactionType
 
-  @Field(() => String)
-  amount!: string
+  @Field(() => Number)
+  amount!: number
 
   @Field(() => String, { nullable: true })
   description!: string | null

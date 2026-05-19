@@ -21,7 +21,7 @@ input CreateCategoryInput {
 }
 
 input CreateTransactionInput {
-  amount: String!
+  amount: Float!
   categoryId: String!
   date: DateTimeISO!
   description: String
@@ -81,7 +81,7 @@ type RegisterOutput {
 }
 
 type TransactionModel {
-  amount: String!
+  amount: Float!
   category: CategoryModel!
   categoryId: String!
   createdAt: DateTimeISO!
@@ -101,7 +101,7 @@ input UpdateCategoryInput {
 }
 
 input UpdateTransactionInput {
-  amount: String
+  amount: Float
   categoryId: String
   date: DateTimeISO
   description: String
