@@ -1,8 +1,8 @@
-@import "@fontsource-variable/inter";
-@import "tailwindcss";
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
 
 :root {
-  font-family: "Inter Variable", sans-serif;
+  font-family: 'Inter Variable', sans-serif;
 
   /* Typography */
   --font-size-xs: 0.5rem;
@@ -198,7 +198,7 @@
 
 @theme {
   /* Fonts */
-  --font-sans: "Inter Variable", sans-serif;
+  --font-sans: 'Inter Variable', sans-serif;
 
   /* Font sizes */
   --text-xs: var(--font-size-xs);

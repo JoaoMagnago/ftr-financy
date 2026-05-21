@@ -1,5 +1,5 @@
 interface LayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function Layout({ children }: LayoutProps) {
@@ -8,5 +8,5 @@ export function Layout({ children }: LayoutProps) {
       {/* Header */}
       <main className="mx-auto px-16 py-4">{children}</main>
     </div>
-  );
+  )
 }
