@@ -13,13 +13,15 @@ import { Link } from 'react-router-dom'
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupButton,
   InputGroupInput,
 } from '@/components/ui/input-group'
-import { Lock, Mail } from 'lucide-react'
+import { Eye, EyeClosed, Lock, Mail } from 'lucide-react'
 
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] items-center justify-center gap-6">
@@ -54,7 +56,7 @@ export function Login() {
               <InputGroup data-state={password ? 'filled' : 'empty'}>
                 <InputGroupInput
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Digite sua senha"
                   value={password}
                   required
@@ -62,6 +64,14 @@ export function Login() {
                 />
                 <InputGroupAddon>
                   <Lock />
+                </InputGroupAddon>
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    size="icon-xs"
+                  >
+                    {showPassword ? <Eye /> : <EyeClosed />}
+                  </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
             </div>
