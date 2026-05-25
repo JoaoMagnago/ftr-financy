@@ -17,6 +17,8 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group'
 import { Eye, EyeClosed, Lock, Mail } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Field, FieldLabel } from '@/components/ui/field'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -75,7 +77,27 @@ export function Login() {
                 </InputGroupAddon>
               </InputGroup>
             </div>
-            <Button type="submit" className="w-full">
+
+            <div className="flex items-center justify-between">
+              <Field orientation="horizontal">
+                <Checkbox
+                  id="remember-me-checkbox"
+                  name="remember-me-checkbox"
+                />
+                <FieldLabel
+                  className="font-normal"
+                  htmlFor="terms-checkbox-invalid"
+                >
+                  Lembrar-me
+                </FieldLabel>
+              </Field>
+
+              <span className="text-sm font-medium text-primary whitespace-nowrap cursor-pointer hover:underline">
+                Recuperar senha
+              </span>
+            </div>
+
+            <Button type="submit" size="xl" className="w-full">
               Entrar
             </Button>
           </form>
