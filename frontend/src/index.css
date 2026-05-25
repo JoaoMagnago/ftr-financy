@@ -8,6 +8,8 @@
   --font-size-xs: 0.5rem;
   --font-size-sm: 0.875rem;
   --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
 
   /* Radius */
   --radius-md: 8px;
@@ -88,7 +90,7 @@
   --secondary-foreground: var(--gray-800);
 
   --muted: var(--gray-200);
-  --muted-foreground: var(--gray-500);
+  --muted-foreground: var(--gray-600);
 
   --border: var(--gray-200);
   --input: var(--gray-200);
@@ -204,6 +206,8 @@
   --text-xs: var(--font-size-xs);
   --text-sm: var(--font-size-sm);
   --text-md: var(--font-size-md);
+  --text-lg: var(--font-size-lg);
+  --text-xl: var(--font-size-xl);
 
   /* Radius */
   --radius-md: var(--radius-md);
@@ -241,14 +245,19 @@
   --color-tag-red-foreground: var(--tag-red-foreground);
 }
 
-* {
-  border-color: var(--border);
-}
-
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
   background: var(--background);
   color: var(--foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
