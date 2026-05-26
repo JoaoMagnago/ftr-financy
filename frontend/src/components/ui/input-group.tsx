@@ -164,6 +164,8 @@ function InputGroupInput({
         `
           flex-1 rounded-none border-0 bg-transparent 
           text-(--input-placeholder) shadow-none ring-0
+
+          placeholder:text-(--input-placeholder)
           
           group-data-[state=filled]/input-group:text-(--input-color)
           focus-visible:ring-0

@@ -18,6 +18,7 @@ import {
 import { Eye, EyeClosed, Lock, Mail, UserRoundPlus } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldLabel } from '@/components/ui/field'
+import { Separator } from '@/components/ui/separator'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -104,10 +105,10 @@ export function Login() {
             </Button>
           </form>
 
-          <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-center w-full">
-            <div className="border-t border-gray-300" />
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-3 items-center w-full">
+            <Separator />
             <span className="text-sm text-gray-500">ou</span>
-            <div className="border-t border-gray-300" />
+            <Separator />
           </div>
 
           <div className="flex flex-col items-center gap-4 w-full">
