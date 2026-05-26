@@ -9,14 +9,13 @@ import {
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
 } from '@/components/ui/input-group'
-import { Eye, EyeClosed, Lock, Mail } from 'lucide-react'
+import { Eye, EyeClosed, Lock, Mail, UserRoundPlus } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldLabel } from '@/components/ui/field'
 
@@ -35,85 +34,92 @@ export function Login() {
           </CardTitle>
           <CardDescription>Entre na sua conta para continuar</CardDescription>
         </CardHeader>
-        <CardContent>
-          <form className="space-y-4">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="email">E-mail</Label>
-              <InputGroup data-state={email ? 'filled' : 'empty'}>
-                <InputGroupInput
-                  id="email"
-                  type="email"
-                  placeholder="mail@exemplo.com"
-                  value={email}
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <InputGroupAddon>
-                  <Mail />
-                </InputGroupAddon>
-              </InputGroup>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="password">Senha</Label>
-              <InputGroup data-state={password ? 'filled' : 'empty'}>
-                <InputGroupInput
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Digite sua senha"
-                  value={password}
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <InputGroupAddon>
-                  <Lock />
-                </InputGroupAddon>
-                <InputGroupAddon align="inline-end">
-                  <InputGroupButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    size="icon-xs"
+        <CardContent className="flex flex-col items-center gap-6">
+          <form className="space-y-6 w-full">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="email">E-mail</Label>
+                <InputGroup data-state={email ? 'filled' : 'empty'}>
+                  <InputGroupInput
+                    id="email"
+                    type="email"
+                    placeholder="mail@exemplo.com"
+                    value={email}
+                    required
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <InputGroupAddon>
+                    <Mail />
+                  </InputGroupAddon>
+                </InputGroup>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="password">Senha</Label>
+                <InputGroup data-state={password ? 'filled' : 'empty'}>
+                  <InputGroupInput
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Digite sua senha"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <InputGroupAddon>
+                    <Lock />
+                  </InputGroupAddon>
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      size="icon-xs"
+                    >
+                      {showPassword ? <Eye /> : <EyeClosed />}
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Field orientation="horizontal">
+                  <Checkbox
+                    id="remember-me-checkbox"
+                    name="remember-me-checkbox"
+                  />
+                  <FieldLabel
+                    className="font-normal"
+                    htmlFor="terms-checkbox-invalid"
                   >
-                    {showPassword ? <Eye /> : <EyeClosed />}
-                  </InputGroupButton>
-                </InputGroupAddon>
-              </InputGroup>
-            </div>
+                    Lembrar-me
+                  </FieldLabel>
+                </Field>
 
-            <div className="flex items-center justify-between">
-              <Field orientation="horizontal">
-                <Checkbox
-                  id="remember-me-checkbox"
-                  name="remember-me-checkbox"
-                />
-                <FieldLabel
-                  className="font-normal"
-                  htmlFor="terms-checkbox-invalid"
-                >
-                  Lembrar-me
-                </FieldLabel>
-              </Field>
-
-              <span className="text-sm font-medium text-primary whitespace-nowrap cursor-pointer hover:underline">
-                Recuperar senha
-              </span>
+                <span className="text-sm font-medium text-primary whitespace-nowrap cursor-pointer hover:underline">
+                  Recuperar senha
+                </span>
+              </div>
             </div>
 
             <Button type="submit" size="xl" className="w-full">
               Entrar
             </Button>
           </form>
-        </CardContent>
-      </Card>
-      <Card className="w-full max-w-md rounded-xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            Ainda não tem uma conta?
-          </CardTitle>
-          <CardDescription>Cadastre-se agora mesmo</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button variant="outline" className="w-full" asChild>
-            <Link to="/signup"> Criar conta </Link>
-          </Button>
+
+          <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-center w-full">
+            <div className="border-t border-gray-300" />
+            <span className="text-sm text-gray-500">ou</span>
+            <div className="border-t border-gray-300" />
+          </div>
+
+          <div className="flex flex-col items-center gap-4 w-full">
+            <p className="text-sm text-muted-foreground">
+              Ainda não tem uma conta?
+            </p>
+
+            <Button variant="outline" size="xl" className="w-full">
+              <UserRoundPlus />
+              <text>Criar conta</text>
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
