@@ -15,13 +15,12 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from '@/components/ui/input-group'
-import { Eye, EyeClosed, Lock, Mail, UserRoundPlus } from 'lucide-react'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Field, FieldLabel } from '@/components/ui/field'
+import { Eye, EyeClosed, Lock, LogIn, Mail, UserRound } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { Link } from 'react-router-dom'
 
-export function Login() {
+export function Signup() {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -32,13 +31,32 @@ export function Login() {
       <Card className="w-full max-w-md rounded-xl">
         <CardHeader className="flex flex-col items-center border-s-red-200 justify-center">
           <CardTitle className="text-xl font-bold color-foreground">
-            Fazer login
+            Criar conta
           </CardTitle>
-          <CardDescription>Entre na sua conta para continuar</CardDescription>
+          <CardDescription>
+            Comece a controlar suas finanças ainda hoje
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-6">
           <form className="space-y-6 w-full">
             <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="name">Nome completo</Label>
+                <InputGroup data-state={name ? 'filled' : 'empty'}>
+                  <InputGroupInput
+                    id="name"
+                    type="text"
+                    placeholder="Seu nome completo"
+                    value={name}
+                    required
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <InputGroupAddon>
+                    <UserRound />
+                  </InputGroupAddon>
+                </InputGroup>
+              </div>
+
               <div className="flex flex-col gap-2">
                 <Label htmlFor="email">E-mail</Label>
                 <InputGroup data-state={email ? 'filled' : 'empty'}>
@@ -79,30 +97,14 @@ export function Login() {
                     </InputGroupButton>
                   </InputGroupAddon>
                 </InputGroup>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="remember-me-checkbox"
-                    name="remember-me-checkbox"
-                  />
-                  <FieldLabel
-                    className="font-normal"
-                    htmlFor="terms-checkbox-invalid"
-                  >
-                    Lembrar-me
-                  </FieldLabel>
-                </Field>
-
-                <span className="text-sm font-medium text-primary whitespace-nowrap cursor-pointer hover:underline">
-                  Recuperar senha
+                <span className="text-xs text-(--gray-500)">
+                  A senha deve ter no mínimo 8 caracteres
                 </span>
               </div>
             </div>
 
             <Button type="submit" size="xl" className="w-full">
-              Entrar
+              Cadastrar
             </Button>
           </form>
 
@@ -113,14 +115,12 @@ export function Login() {
           </div>
 
           <div className="flex flex-col items-center gap-4 w-full">
-            <p className="text-sm text-muted-foreground">
-              Ainda não tem uma conta?
-            </p>
+            <p className="text-sm text-muted-foreground">Já tem uma conta?</p>
 
             <Button variant="outline" size="xl" className="w-full" asChild>
-              <Link to="/signup">
-                <UserRoundPlus />
-                Criar conta
+              <Link to="/">
+                <LogIn />
+                Fazer login
               </Link>
             </Button>
           </div>
