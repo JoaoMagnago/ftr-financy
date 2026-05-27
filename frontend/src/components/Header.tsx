@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/auth'
-import logoIcon from '@/assets/logo_icon.svg'
 import { Button } from './ui/button'
 import { Avatar } from './Avatar'
+
+import logo from '@/assets/logo.svg'
 
 export const Header = () => {
   const { user, isAuthenticated } = useAuthStore()
@@ -14,18 +15,22 @@ export const Header = () => {
   const isCategoriesPage = location.pathname === '/categories'
 
   return (
-    <div className="w-full px-16 pt-6">
+    <div className="w-full px-12 py-4 border-b border-(--gray-200)">
       {isAuthenticated && (
-        <div className="flex justify-between w-full">
-          <div className="min-w-48">
-            <img src={logoIcon} />
+        <div className="flex items-center justify-between w-full">
+          <div
+            className="items-center min-w-25 cursor-pointer"
+            onClick={() => navigate('/')}
+          >
+            <img src={logo} />
           </div>
+
           <div className="flex items-center gap-4">
             <Link to="/">
               <Button
                 size="sm"
-                className="gap-2"
-                variant={isDashboardsPage ? 'default' : 'ghost'}
+                className={isDashboardsPage ? 'text-primary font-semibold' : ''}
+                variant={'link'}
               >
                 Dashboards
               </Button>
@@ -33,8 +38,10 @@ export const Header = () => {
             <Link to="/transactions">
               <Button
                 size="sm"
-                className="gap-2"
-                variant={isTransactionsPage ? 'default' : 'ghost'}
+                className={
+                  isTransactionsPage ? 'text-primary  font-semibold' : ''
+                }
+                variant={'link'}
               >
                 Transações
               </Button>
@@ -42,13 +49,16 @@ export const Header = () => {
             <Link to="/categories">
               <Button
                 size="sm"
-                className="gap-2"
-                variant={isCategoriesPage ? 'default' : 'ghost'}
+                className={
+                  isCategoriesPage ? 'text-primary  font-semibold' : ''
+                }
+                variant={'link'}
               >
                 Categorias
               </Button>
             </Link>
           </div>
+
           <div onClick={() => navigate('/profile')}>
             <Avatar name={user?.name} />
           </div>
