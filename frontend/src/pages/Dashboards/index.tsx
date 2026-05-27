@@ -22,7 +22,7 @@ export const Dashboards = () => {
         icon={<CircleArrowDown className="text-(--red-base)" />}
       />
 
-      <RecentTransactionsTable className="col-span-3" />
+      <RecentTransactionsTable className="col-span-2" />
 
       <CategoriesSummaryList />
     </div>

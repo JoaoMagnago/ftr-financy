@@ -18,32 +18,26 @@ export interface LoginInput {
   password: string
 }
 
-export interface Idea {
-  id: string
-  title: string
-  description?: string | null
-  authorId: string
-  author?: User
-  countVotes?: number
-  comments?: Comment[]
-  votes?: Vote[]
-  createdAt: string
-  updatedAt?: string
+export enum TransactionType {
+  EXPENSE,
+  REVENUE,
 }
 
-export interface Comment {
-  id: string
-  ideaId: string
-  authorId: string
-  author?: User
-  content: string
-  createdAt: string
-  updatedAt?: string
-}
-
-export interface Vote {
-  id: string
-  ideaId: string
-  userId: string
-  createdAt: string
+export enum CategoryIcon {
+  BRIEFCASE,
+  CAR,
+  HEALTH,
+  PIGGY_BANK,
+  SHOPPING_CART,
+  TICKET,
+  TOOLS,
+  FOOD,
+  PET,
+  HOUSE,
+  GIFT,
+  EXERCISE,
+  BOOK,
+  BAGGAGE,
+  MAIL,
+  RECEIPT,
 }
