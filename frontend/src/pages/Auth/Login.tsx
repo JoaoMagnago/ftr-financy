@@ -34,7 +34,7 @@ const loginFormSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginFormSchema>
 
-export function Login() {
+export const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
 
   const login = useAuthStore((state) => state.login)
