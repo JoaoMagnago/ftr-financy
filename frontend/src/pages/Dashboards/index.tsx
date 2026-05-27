@@ -1,5 +1,7 @@
 import { CircleArrowDown, CircleArrowUp, Wallet } from 'lucide-react'
 import { DashboardNumberCard } from './components/DashboardNumberCard'
+import { RecentTransactionsTable } from './components/RecentTransactionsTable'
+import { CategoriesSummaryList } from './components/CategoriesSummaryList'
 
 export const Dashboards = () => {
   return (
@@ -19,6 +21,10 @@ export const Dashboards = () => {
         valueInCents={218045}
         icon={<CircleArrowDown className="text-(--red-base)" />}
       />
+
+      <RecentTransactionsTable className="col-span-3" />
+
+      <CategoriesSummaryList />
     </div>
   )
 }
