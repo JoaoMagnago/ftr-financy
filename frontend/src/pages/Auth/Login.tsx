@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import logo from '@/assets/logo.svg'
 import {
   Card,
   CardContent,
@@ -20,11 +19,42 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Separator } from '@/components/ui/separator'
 import { Link } from 'react-router-dom'
+import { useAuthStore } from '@/stores/auth'
+
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import logo from '@/assets/logo.svg'
+
+const loginFormSchema = z.object({
+  email: z.email(),
+  password: z.string().min(8, 'A senha deve ter no mínimo 8 caracteres'),
+})
+
+type LoginFormData = z.infer<typeof loginFormSchema>
 
 export function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+
+  const login = useAuthStore((state) => state.login)
+  const [loading, setLoading] = useState(false)
+
+  const { control, handleSubmit } = useForm<LoginFormData>({
+    resolver: zodResolver(loginFormSchema),
+  })
+
+  const onSubmit = async (data: LoginFormData) => {
+    setLoading(true)
+
+    try {
+      await login(data)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] items-center justify-center gap-6">
@@ -37,49 +67,65 @@ export function Login() {
           <CardDescription>Entre na sua conta para continuar</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-6">
-          <form className="space-y-6 w-full">
+          <form
+            className="space-y-6 w-full"
+            noValidate
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="email">E-mail</Label>
-                <InputGroup data-state={email ? 'filled' : 'empty'}>
-                  <InputGroupInput
-                    id="email"
-                    type="email"
-                    placeholder="mail@exemplo.com"
-                    value={email}
-                    required
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <InputGroupAddon>
-                    <Mail />
-                  </InputGroupAddon>
-                </InputGroup>
-              </div>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="email">E-mail</Label>
+                    <InputGroup data-state={value ? 'filled' : 'empty'}>
+                      <InputGroupInput
+                        id="email"
+                        type="email"
+                        placeholder="mail@exemplo.com"
+                        value={value}
+                        required
+                        onChange={onChange}
+                      />
+                      <InputGroupAddon>
+                        <Mail />
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </div>
+                )}
+              />
 
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="password">Senha</Label>
-                <InputGroup data-state={password ? 'filled' : 'empty'}>
-                  <InputGroupInput
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Digite sua senha"
-                    value={password}
-                    required
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <InputGroupAddon>
-                    <Lock />
-                  </InputGroupAddon>
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      size="icon-xs"
-                    >
-                      {showPassword ? <Eye /> : <EyeClosed />}
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-              </div>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="password">Senha</Label>
+                    <InputGroup data-state={value ? 'filled' : 'empty'}>
+                      <InputGroupInput
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Digite sua senha"
+                        value={value}
+                        required
+                        onChange={onChange}
+                      />
+                      <InputGroupAddon>
+                        <Lock />
+                      </InputGroupAddon>
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          size="icon-xs"
+                        >
+                          {showPassword ? <Eye /> : <EyeClosed />}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </div>
+                )}
+              />
 
               <div className="flex items-center justify-between">
                 <Field orientation="horizontal">
@@ -101,7 +147,12 @@ export function Login() {
               </div>
             </div>
 
-            <Button type="submit" size="xl" className="w-full">
+            <Button
+              type="submit"
+              size="xl"
+              className="w-full"
+              disabled={loading}
+            >
               Entrar
             </Button>
           </form>
