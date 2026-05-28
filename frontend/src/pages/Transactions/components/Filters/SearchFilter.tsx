@@ -20,10 +20,8 @@ export const SearchFilter = () => {
   }, [debouncedSearch])
 
   return (
-    <div className="flex flex-col gap-2">
-      <Label htmlFor="search" className="">
-        Buscar
-      </Label>
+    <div className="flex flex-col gap-2 w-full">
+      <Label htmlFor="search">Buscar</Label>
       <InputGroup data-state={search.length > 0 ? 'filled' : 'empty'}>
         <InputGroupAddon>
           <Search />
