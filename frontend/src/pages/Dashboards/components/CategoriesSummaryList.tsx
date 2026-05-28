@@ -93,16 +93,16 @@ export const CategoriesSummaryList = ({
               className="grid grid-cols-[1fr_auto] items-center"
             >
               <div className="flex items-center justify-between">
-                <CategoryLabel {...category}></CategoryLabel>
+                <CategoryLabel name={category.name} />
                 <span className="text-sm text-muted-foreground">
                   {category.amountItems} itens
                 </span>
               </div>
 
               <div className="w-22 text-right">
-                <text className="text-sm text-foreground font-semibold">
+                <span className="text-sm text-foreground font-semibold">
                   {amountFormatted}
-                </text>
+                </span>
               </div>
             </div>
           )

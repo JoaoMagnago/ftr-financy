@@ -1,3 +1,4 @@
+import { CategoryLabel } from '@/components/CategoryLabel'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
@@ -29,7 +30,7 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
       },
     },
     {
-      id: '1',
+      id: '2',
       name: 'Jantar no restaurante',
       type: TransactionType.EXPENSE,
       amount: '8950',
@@ -42,7 +43,7 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
       },
     },
     {
-      id: '1',
+      id: '3',
       name: 'Posto de gasolina',
       type: TransactionType.EXPENSE,
       amount: '10000',
@@ -55,7 +56,7 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
       },
     },
     {
-      id: '1',
+      id: '4',
       name: 'Compras no mercado',
       type: TransactionType.EXPENSE,
       amount: '15680',
@@ -68,7 +69,7 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
       },
     },
     {
-      id: '1',
+      id: '5',
       name: 'Retorno de investimento',
       type: TransactionType.REVENUE,
       amount: '34025',
@@ -136,18 +137,16 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
 
                   <TableCell className="w-[20%]">
                     <div className="flex items-center justify-center">
-                      <div className="flex items-center justify-center text-sm text-(--green-dark) font-medium rounded-full bg-(--green-light) w-fit py-1 px-3">
-                        {transaction.category.name}
-                      </div>
+                      <CategoryLabel name={transaction.category.name} />
                     </div>
                   </TableCell>
 
                   <TableCell className="pr-6 text-right w-[20%]">
                     <div className="flex items-center justify-end gap-2">
-                      <text className="text-sm font-semibold text-foreground">
+                      <span className="text-sm font-semibold text-foreground">
                         {isExpense ? '- ' : '+ '}
                         {amountFormatted}
-                      </text>
+                      </span>
                       {isExpense ? (
                         <CircleArrowDown className="text-(--red-base) w-4 h-4" />
                       ) : (

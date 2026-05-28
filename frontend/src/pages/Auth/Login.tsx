@@ -135,7 +135,7 @@ export const Login = () => {
                   />
                   <FieldLabel
                     className="font-normal"
-                    htmlFor="terms-checkbox-invalid"
+                    htmlFor="remember-me-checkbox"
                   >
                     Lembrar-me
                   </FieldLabel>
