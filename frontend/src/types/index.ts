@@ -18,11 +18,6 @@ export interface LoginInput {
   password: string
 }
 
-export enum TransactionType {
-  EXPENSE,
-  REVENUE,
-}
-
 export enum CategoryIcon {
   BRIEFCASE,
   CAR,
@@ -40,4 +35,19 @@ export enum CategoryIcon {
   BAGGAGE,
   MAIL,
   RECEIPT,
+}
+
+export interface Category {
+  id: string
+  name: string
+  icon: CategoryIcon
+  color: string
+  description?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export enum TransactionType {
+  EXPENSE,
+  REVENUE,
 }

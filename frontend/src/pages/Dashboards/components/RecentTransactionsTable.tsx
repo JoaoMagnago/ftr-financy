@@ -9,8 +9,11 @@ import {
   CircleArrowUp,
   Plus,
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 export function RecentTransactionsTable({ className }: { className?: string }) {
+  const navigate = useNavigate()
+
   const transactions = [
     {
       id: '1',
@@ -85,7 +88,10 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
         <p className="text-xs text-(--gray-500) font-medium tracking-[0.6px] uppercase">
           Transações recentes
         </p>
-        <Button className="bg-transparent border-none text-sm font-medium text-primary hover:bg-transparent">
+        <Button
+          className="bg-transparent border-none text-sm font-medium text-primary hover:bg-transparent"
+          onClick={() => navigate('/transactions')}
+        >
           <span>Ver todas</span>
           <ChevronRight />
         </Button>
