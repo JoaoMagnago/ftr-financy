@@ -21,12 +21,12 @@ export const SearchFilter = () => {
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <Label htmlFor="search">Buscar</Label>
+      <Label htmlFor="search-input">Buscar</Label>
       <InputGroup data-state={search.length > 0 ? 'filled' : 'empty'}>
         <InputGroupAddon>
           <Search />
           <InputGroupInput
-            id="search"
+            id="search-input"
             placeholder="Buscar por descrição"
             className="font-normal"
             autoComplete="off"

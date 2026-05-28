@@ -15,7 +15,7 @@ export const TypeFilter = () => {
 
       <Select defaultValue="all">
         <SelectTrigger className="h-12 w-full">
-          <SelectValue />
+          <SelectValue id="type-select" />
         </SelectTrigger>
         <SelectContent
           position="popper"

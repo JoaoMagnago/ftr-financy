@@ -2,6 +2,7 @@ import { Card } from '@/components/ui/card'
 import { SearchFilter } from './SearchFilter'
 import { TypeFilter } from './TypeFilter'
 import { CategoryFilter } from './CategoryFilter'
+import { TimePeriodFilter } from './TimePeriodFilter'
 
 export const Filters = () => {
   const categories = [
@@ -21,6 +22,8 @@ export const Filters = () => {
       <TypeFilter />
 
       <CategoryFilter categories={categories} />
+
+      <TimePeriodFilter />
     </Card>
   )
 }

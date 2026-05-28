@@ -18,7 +18,7 @@ interface CategoryFilterProps {
 export const CategoryFilter = ({ categories }: CategoryFilterProps) => {
   return (
     <div className="flex flex-col gap-2 w-full">
-      <Label htmlFor="type-select">Categoria</Label>
+      <Label htmlFor="category-select">Categoria</Label>
 
       <Select defaultValue="all">
         <SelectTrigger className="h-12 w-full">
