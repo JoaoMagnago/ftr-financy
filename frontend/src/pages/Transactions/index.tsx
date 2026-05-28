@@ -1,5 +1,6 @@
 import { Header } from '@/components/Header'
 import { Filters } from './components/Filters'
+import { TransactionsTable } from './components/TransactionsTable'
 
 export const Transactions = () => {
   return (
@@ -11,6 +12,8 @@ export const Transactions = () => {
       />
 
       <Filters />
+
+      <TransactionsTable />
     </div>
   )
 }

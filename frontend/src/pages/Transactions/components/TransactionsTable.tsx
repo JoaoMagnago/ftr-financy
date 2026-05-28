@@ -1,20 +1,17 @@
 import { CategoryLabel } from '@/components/CategoryLabel'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { TransactionType } from '@/types'
+import { Card, CardContent } from '@/components/ui/card'
 import {
-  BriefcaseBusiness,
-  ChevronRight,
-  CircleArrowDown,
-  CircleArrowUp,
-  Plus,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { TransactionType } from '@/types'
+import { BriefcaseBusiness, CircleArrowDown, CircleArrowUp } from 'lucide-react'
 
-export function RecentTransactionsTable({ className }: { className?: string }) {
-  const navigate = useNavigate()
-
+export function TransactionsTable({ className }: { className?: string }) {
   const transactions = [
     {
       id: '1',
@@ -85,20 +82,22 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
 
   return (
     <Card className={`p-0 gap-0 ${className}`}>
-      <CardHeader className="grid-cols-[1fr_auto] items-center pl-6 pr-3 py-5 border-b border-(--border)">
-        <p className="text-xs text-(--gray-500) font-medium tracking-[0.6px] uppercase">
-          Transações recentes
-        </p>
-        <Button
-          className="bg-transparent border-none text-sm font-medium text-primary hover:bg-transparent"
-          onClick={() => navigate('/transactions')}
-        >
-          <span>Ver todas</span>
-          <ChevronRight />
-        </Button>
-      </CardHeader>
       <CardContent className="flex flex-col items-center justify-center p-0">
         <Table className="table-fixed w-full">
+          <TableHeader>
+            <TableRow className="py-5 hover:bg-transparent">
+              <TableHead className="w-[40%] pl-6 py-5">Descrição</TableHead>
+              <TableHead className="text-center w-[14%] py-5">Data</TableHead>
+              <TableHead className="text-center w-[16%] py-5">
+                Categoria
+              </TableHead>
+              <TableHead className="text-center w-[10%] py-5">Tipo</TableHead>
+              <TableHead className="w-[10%] py-5 text-right">Valor</TableHead>
+              <TableHead className="w-[10%] pr-6 py-5 text-right">
+                Ações
+              </TableHead>
+            </TableRow>
+          </TableHeader>
           <TableBody className="border-b border-border">
             {transactions.map((transaction) => {
               const dateFormatted = new Date(
@@ -118,56 +117,60 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
 
               return (
                 <TableRow key={transaction.id} className="hover:bg-transparent">
-                  <TableCell className="pl-6 w-[60%]">
+                  <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
                       <div className="flex h-10 w-10 items-center justify-center rounded-md bg-(--green-light) text-(--green-base)">
                         {transaction.category.icon}
                       </div>
 
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-md font-medium text-foreground">
-                          {transaction.name}
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          {dateFormatted}
-                        </span>
-                      </div>
+                      <span className="text-md font-medium text-foreground">
+                        {transaction.name}
+                      </span>
                     </div>
                   </TableCell>
 
-                  <TableCell className="w-[20%]">
+                  <TableCell className="text-center">
+                    <span className="text-sm text-muted-foreground">
+                      {dateFormatted}
+                    </span>
+                  </TableCell>
+
+                  <TableCell>
                     <div className="flex items-center justify-center">
                       <CategoryLabel name={transaction.category.name} />
                     </div>
                   </TableCell>
 
-                  <TableCell className="pr-6 text-right w-[20%]">
-                    <div className="flex items-center justify-end gap-2">
-                      <span className="text-sm font-semibold text-foreground">
-                        {isExpense ? '- ' : '+ '}
-                        {amountFormatted}
-                      </span>
+                  <TableCell>
+                    <div className="flex items-center justify-center font-medium gap-2">
                       {isExpense ? (
                         <CircleArrowDown className="text-(--red-base) w-4 h-4" />
                       ) : (
                         <CircleArrowUp className="text-(--brand-base) w-4 h-4" />
                       )}
+                      <span
+                        className={`${isExpense ? 'text-(--red-base)' : 'text-(--brand-base)'}`}
+                      >
+                        {isExpense ? 'Saída' : 'Entrada'}
+                      </span>
                     </div>
                   </TableCell>
+
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <span className="text-sm font-semibold text-foreground">
+                        {isExpense ? '- ' : '+ '}
+                        {amountFormatted}
+                      </span>
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="pr-6 text-right"></TableCell>
                 </TableRow>
               )
             })}
           </TableBody>
         </Table>
-        <div className="flex justify-center py-5 w-full">
-          <Button
-            variant="link"
-            className="text-primary gap-1 hover:no-underline"
-          >
-            <Plus />
-            <span>Nova transação</span>
-          </Button>
-        </div>
       </CardContent>
     </Card>
   )
