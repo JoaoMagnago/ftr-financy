@@ -1,5 +1,6 @@
 import { CategoryLabel } from '@/components/CategoryLabel'
-import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -9,9 +10,21 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { TransactionType } from '@/types'
-import { BriefcaseBusiness, CircleArrowDown, CircleArrowUp } from 'lucide-react'
+import {
+  BriefcaseBusiness,
+  CircleArrowDown,
+  CircleArrowUp,
+  SquarePen,
+  Trash,
+} from 'lucide-react'
+import { CustomPagination } from './CustomPagination'
+import { useState } from 'react'
 
 export function TransactionsTable({ className }: { className?: string }) {
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = 10
+  const totalCount = 28
+
   const transactions = [
     {
       id: '1',
@@ -165,13 +178,36 @@ export function TransactionsTable({ className }: { className?: string }) {
                     </div>
                   </TableCell>
 
-                  <TableCell className="pr-6 text-right"></TableCell>
+                  <TableCell className="pr-6 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button variant="outline" size="icon-sm">
+                        <Trash className="text-(--danger)" />
+                      </Button>
+                      <Button variant="outline" size="icon-sm">
+                        <SquarePen className="text-(--icon-button-foreground)" />
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
               )
             })}
           </TableBody>
         </Table>
       </CardContent>
+      <CardFooter className="flex items-center justify-end px-6 py-5">
+        <div className="flex items-center gap-1 text-sm text-(--gray-700) w-full">
+          <span className="font-medium">{currentPage}</span>
+          <span>de</span>
+          <span className="font-medium">{totalPages}</span>
+          <span> | {totalCount} resultados</span>
+        </div>
+
+        <CustomPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </CardFooter>
     </Card>
   )
 }

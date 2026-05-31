@@ -26,37 +26,32 @@ export const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <Link to="/">
-              <Button
-                size="sm"
-                className={isDashboardsPage ? 'text-primary font-semibold' : ''}
-                variant={'link'}
-              >
-                Dashboards
-              </Button>
-            </Link>
-            <Link to="/transactions">
-              <Button
-                size="sm"
-                className={
-                  isTransactionsPage ? 'text-primary  font-semibold' : ''
-                }
-                variant={'link'}
-              >
-                Transações
-              </Button>
-            </Link>
-            <Link to="/categories">
-              <Button
-                size="sm"
-                className={
-                  isCategoriesPage ? 'text-primary  font-semibold' : ''
-                }
-                variant={'link'}
-              >
-                Categorias
-              </Button>
-            </Link>
+            <Button
+              asChild
+              size="sm"
+              variant="link"
+              className={isDashboardsPage ? 'font-semibold text-primary' : ''}
+            >
+              <Link to="/">Dashboards</Link>
+            </Button>
+
+            <Button
+              asChild
+              size="sm"
+              variant="link"
+              className={isTransactionsPage ? 'font-semibold text-primary' : ''}
+            >
+              <Link to="/transactions">Transações</Link>
+            </Button>
+
+            <Button
+              asChild
+              size="sm"
+              variant="link"
+              className={isCategoriesPage ? 'font-semibold text-primary' : ''}
+            >
+              <Link to="/categories">Categorias</Link>
+            </Button>
           </div>
 
           <div onClick={() => navigate('/profile')}>

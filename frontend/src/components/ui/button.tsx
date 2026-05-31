@@ -9,6 +9,7 @@ function Button({
   className,
   variant = 'default',
   size = 'default',
+  disabled = false,
   asChild = false,
   ...props
 }: React.ComponentProps<'button'> &
@@ -22,6 +23,8 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
+      data-disabled={disabled}
+      disabled={disabled}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
