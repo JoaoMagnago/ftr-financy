@@ -37,6 +37,15 @@ export enum CategoryIcon {
   RECEIPT,
 }
 
+export enum CategoryColor {
+  GREEN = 'GREEN',
+  BLUE = 'BLUE',
+  PURPLE = 'PURPLE',
+  PINK = 'PINK',
+  RED = 'RED',
+  ORANGE = 'ORANGE',
+  YELLOW = 'YELLOW',
+}
 export interface Category {
   id: string
   name: string

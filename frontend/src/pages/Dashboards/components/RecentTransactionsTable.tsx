@@ -90,7 +90,7 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
           Transações recentes
         </p>
         <Button
-          className="bg-transparent border-none text-sm font-medium text-primary hover:bg-transparent"
+          className="bg-transparent border-none text-sm font-medium text-primary enabled:hover:bg-transparent"
           onClick={() => navigate('/transactions')}
         >
           <span>Ver todas</span>

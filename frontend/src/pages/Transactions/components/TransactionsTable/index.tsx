@@ -1,5 +1,4 @@
 import { CategoryLabel } from '@/components/CategoryLabel'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
   Table,
@@ -10,15 +9,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { TransactionType } from '@/types'
-import {
-  BriefcaseBusiness,
-  CircleArrowDown,
-  CircleArrowUp,
-  SquarePen,
-  Trash,
-} from 'lucide-react'
+import { BriefcaseBusiness, CircleArrowDown, CircleArrowUp } from 'lucide-react'
 import { CustomPagination } from './CustomPagination'
 import { useState } from 'react'
+import { DeleteAndEditButtonGroup } from '@/components/DeleteAndEditButtonGroup'
 
 export function TransactionsTable({ className }: { className?: string }) {
   const [currentPage, setCurrentPage] = useState(1)
@@ -179,14 +173,10 @@ export function TransactionsTable({ className }: { className?: string }) {
                   </TableCell>
 
                   <TableCell className="pr-6 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="outline" size="icon-sm">
-                        <Trash className="text-(--danger)" />
-                      </Button>
-                      <Button variant="outline" size="icon-sm">
-                        <SquarePen className="text-(--icon-button-foreground)" />
-                      </Button>
-                    </div>
+                    <DeleteAndEditButtonGroup
+                      onDelete={() => {}}
+                      onEdit={() => {}}
+                    />
                   </TableCell>
                 </TableRow>
               )
