@@ -9,7 +9,7 @@ import { createElement } from 'react'
 export const CategoriesGrid = () => {
   return (
     <div className="grid grid-cols-4 gap-4 w-full">
-      {[...Array(12)].map((_, index) => (
+      {[...Array(9)].map((_, index) => (
         <CategoryCard
           key={index}
           name={`Alimento`}
