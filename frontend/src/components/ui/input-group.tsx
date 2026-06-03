@@ -28,6 +28,8 @@ function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
           has-[>[data-align=block-start]]:h-auto
           has-[>[data-align=block-start]]:flex-col
 
+          has-disabled:cursor-not-allowed
+
           has-[>textarea]:h-auto
           
           dark:bg-input/30

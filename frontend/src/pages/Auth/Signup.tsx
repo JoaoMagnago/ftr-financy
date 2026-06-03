@@ -59,7 +59,7 @@ export const Signup = () => {
     <div className="flex flex-col min-h-[calc(100vh-4rem)] items-center justify-center gap-6">
       <img src={logo} className="w-32 h-8" />
       <Card className="w-full max-w-md rounded-xl">
-        <CardHeader className="flex flex-col items-center border-s-red-200 justify-center">
+        <CardHeader className="flex flex-col items-center justify-center">
           <CardTitle className="text-xl font-bold color-foreground">
             Criar conta
           </CardTitle>
@@ -140,8 +140,8 @@ export const Signup = () => {
                       </InputGroupAddon>
                       <InputGroupAddon align="inline-end">
                         <InputGroupButton
-                          onClick={() => setShowPassword(!showPassword)}
                           size="icon-xs"
+                          onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <Eye /> : <EyeClosed />}
                         </InputGroupButton>

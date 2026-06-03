@@ -17,15 +17,15 @@ export const Navbar = () => {
   return (
     <div className="w-full px-12 py-4 border-b border-(--gray-200) sticky top-0 z-50 bg-background">
       {isAuthenticated && (
-        <div className="flex items-center justify-between w-full">
+        <div className="relative flex items-center justify-between w-full">
           <div
-            className="items-center min-w-25 cursor-pointer"
+            className="items-center w-25 cursor-pointer"
             onClick={() => navigate('/')}
           >
             <img src={logo} />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4">
             <Button
               asChild
               size="sm"
@@ -54,8 +54,11 @@ export const Navbar = () => {
             </Button>
           </div>
 
-          <div onClick={() => navigate('/profile')}>
-            <Avatar name={user?.name} />
+          <div
+            className="justify-self-end"
+            onClick={() => navigate('/profile')}
+          >
+            <Avatar name={user?.name} isClickable />
           </div>
         </div>
       )}

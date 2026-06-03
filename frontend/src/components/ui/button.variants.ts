@@ -44,14 +44,14 @@ const buttonVariants = cva(
           'enabled:hover:bg-muted enabled:hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:enabled:hover:bg-muted/50',
         destructive:
           'bg-destructive/10 text-destructive enabled:hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:enabled:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
-        link: 'text-muted-foreground font-medium underline-offset-4 hover:underline hover:text-primary data-[disabled=true]:hover:no-underline data-[disabled=true]:hover:text-muted-foreground',
+        link: 'text-muted-foreground underline-offset-4 hover:underline hover:text-primary data-[disabled=true]:hover:no-underline data-[disabled=true]:hover:text-muted-foreground',
       },
       size: {
         default: 'gap-2 px-4 py-3',
         xs: 'h-6 gap-1 px-2 text-xs',
         sm: 'h-8 gap-2 px-3 py-2',
         lg: 'h-10 gap-2 px-2.5',
-        xl: 'h-12 gap-3 text-md font-medium px-3',
+        xl: 'h-12 gap-3 text-md px-3',
         icon: 'size-9',
         'icon-xs': "size-6 [&_svg:not([class*='size-'])]:size-3",
         'icon-sm': 'size-8',
