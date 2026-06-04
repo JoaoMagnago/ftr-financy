@@ -1,6 +1,7 @@
 import { Header } from '@/components/Header'
 import { CategoriesNumberCards } from './components/CategoriesNumberCards'
 import { CategoriesGrid } from './components/CategoriesGrid'
+import { CategoryModal } from '@/components/Modals/CategoryModal'
 
 export const Categories = () => {
   return (
@@ -8,7 +9,7 @@ export const Categories = () => {
       <Header
         title="Categorias"
         description="Organize suas transações por categorias"
-        buttonLabel="Nova categoria"
+        rightElement={<CategoryModal isEditing={false} />}
       />
 
       <CategoriesNumberCards />

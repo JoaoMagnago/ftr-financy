@@ -1,14 +1,13 @@
-import { Plus } from 'lucide-react'
-import { Button } from './ui/button'
+import type { ReactNode } from 'react'
 
 export const Header = ({
   title,
   description,
-  buttonLabel,
+  rightElement,
 }: {
   title: string
   description: string
-  buttonLabel: string
+  rightElement?: ReactNode
 }) => {
   return (
     <div className="flex items-center justify-between w-full">
@@ -17,10 +16,7 @@ export const Header = ({
         <p className="text-md text-muted-foreground">{description}</p>
       </div>
 
-      <Button>
-        <Plus />
-        <span>{buttonLabel}</span>
-      </Button>
+      {rightElement}
     </div>
   )
 }
