@@ -63,7 +63,7 @@ export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>
           <Plus />
           <span>Nova categoria</span>
@@ -127,14 +127,12 @@ export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
             name="icon"
             control={control}
             render={({ field: { value, onChange } }) => {
-              // @TODO: Transformar enum CategoryIcon em string enum
-              const categoryIcons = Object.values(CategoryIcon).filter(
-                (value): value is CategoryIcon => typeof value === 'number',
-              )
+              const categoryIcons = Object.values(CategoryIcon)
 
               return (
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="icons">Ícone</Label>
+
                   <div className="grid grid-cols-8 gap-2">
                     {categoryIcons.map((icon) => {
                       const IconComponent = resolveIcon(icon)
@@ -142,8 +140,12 @@ export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
                       return (
                         <div
                           key={icon}
-                          className={`flex items-center justify-center h-10.5 w-10.5 border cursor-pointer rounded-md ${value === icon ? 'border-primary bg-secondary' : 'border-(--gray-300)'}`}
-                          onClick={() => onChange(CategoryIcon[icon])}
+                          className={`flex items-center justify-center h-10.5 w-10.5 border cursor-pointer rounded-md ${
+                            value === icon
+                              ? 'border-primary bg-secondary'
+                              : 'border-(--gray-300)'
+                          }`}
+                          onClick={() => onChange(icon)}
                         >
                           <IconComponent className="text-muted-foreground h-5 w-5" />
                         </div>

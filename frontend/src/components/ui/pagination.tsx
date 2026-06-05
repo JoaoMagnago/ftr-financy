@@ -51,7 +51,6 @@ function PaginationLink({
   onClick,
   ...props
 }: PaginationLinkProps) {
-  console.log(isDisabled)
   return (
     <Button
       asChild

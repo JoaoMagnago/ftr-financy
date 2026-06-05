@@ -19,22 +19,22 @@ export interface LoginInput {
 }
 
 export enum CategoryIcon {
-  BRIEFCASE,
-  CAR,
-  HEALTH,
-  PIGGY_BANK,
-  SHOPPING_CART,
-  TICKET,
-  TOOLS,
-  FOOD,
-  PET,
-  HOUSE,
-  GIFT,
-  EXERCISE,
-  BOOK,
-  BAGGAGE,
-  MAIL,
-  RECEIPT,
+  BRIEFCASE = 'BRIEFCASE',
+  CAR = 'CAR',
+  HEALTH = 'HEALTH',
+  PIGGY_BANK = 'PIGGY_BANK',
+  SHOPPING_CART = 'SHOPPING_CART',
+  TICKET = 'TICKET',
+  TOOLS = 'TOOLS',
+  FOOD = 'FOOD',
+  PET = 'PET',
+  HOUSE = 'HOUSE',
+  GIFT = 'GIFT',
+  EXERCISE = 'EXERCISE',
+  BOOK = 'BOOK',
+  BAGGAGE = 'BAGGAGE',
+  MAIL = 'MAIL',
+  RECEIPT = 'RECEIPT',
 }
 
 export enum CategoryColor {
@@ -57,6 +57,6 @@ export interface Category {
 }
 
 export enum TransactionType {
-  EXPENSE,
-  REVENUE,
+  EXPENSE = 'EXPENSE',
+  REVENUE = 'REVENUE',
 }
