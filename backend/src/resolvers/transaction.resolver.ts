@@ -7,9 +7,13 @@ import {
   Root,
   UseMiddleware,
 } from 'type-graphql'
-import { TransactionModel } from '../models/transaction.model.js'
+import {
+  PaginatedTransactionsModel,
+  TransactionModel,
+} from '../models/transaction.model.js'
 import {
   CreateTransactionInput,
+  ListTransactionsInput,
   UpdateTransactionInput,
 } from '../dtos/input/transaction.input.js'
 import { TransactionService } from '../services/transaction.service.js'
@@ -50,11 +54,12 @@ export class TransactionResolver {
     return this.transactionService.deleteTransaction(id, user.id)
   }
 
-  @Query(() => [TransactionModel])
+  @Query(() => PaginatedTransactionsModel)
   async listTransactions(
+    @Arg('data', () => ListTransactionsInput) data: ListTransactionsInput,
     @GqlUser() user: UserModel,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.listTransactions(user.id)
+  ) {
+    return this.transactionService.listTransactions(user.id, data)
   }
 
   @FieldResolver(() => CategoryModel)

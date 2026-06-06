@@ -1,5 +1,5 @@
 import { TransactionType } from '@prisma/client'
-import { Field, GraphQLISODateTime, ID, ObjectType } from 'type-graphql'
+import { Field, GraphQLISODateTime, ID, Int, ObjectType } from 'type-graphql'
 
 @ObjectType()
 export class TransactionModel {
@@ -29,4 +29,22 @@ export class TransactionModel {
 
   @Field(() => GraphQLISODateTime)
   updatedAt!: Date
+}
+
+@ObjectType()
+export class PaginatedTransactionsModel {
+  @Field(() => [TransactionModel])
+  items!: TransactionModel[]
+
+  @Field(() => Int)
+  total!: number
+
+  @Field(() => Int)
+  page!: number
+
+  @Field(() => Int)
+  limit!: number
+
+  @Field(() => Int)
+  pages!: number
 }
