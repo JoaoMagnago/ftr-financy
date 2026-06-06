@@ -11,4 +11,10 @@ export class DashboardSummaryModel {
 
   @Field(() => [TransactionModel])
   latestTransactions!: TransactionModel[]
+
+  @Field(() => Int)
+  transactionCount!: number
+
+  @Field(() => Int)
+  categoryCount!: number
 }

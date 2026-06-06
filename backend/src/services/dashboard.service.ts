@@ -48,18 +48,43 @@ export class DashboardService {
     })
   }
 
+  async getTransactionCount(userId: string): Promise<number> {
+    return prismaClient.transaction.count({
+      where: {
+        userId,
+      },
+    })
+  }
+
+  async getCategoryCount(userId: string): Promise<number> {
+    return prismaClient.category.count({
+      where: {
+        userId,
+      },
+    })
+  }
+
   async getSummary(userId: string): Promise<DashboardSummaryModel> {
-    const [currentMonthRevenue, currentMonthExpense, latestTransactions] =
-      await Promise.all([
-        this.getCurrentMonthRevenue(userId),
-        this.getCurrentMonthExpense(userId),
-        this.listLatestTransactions(userId),
-      ])
+    const [
+      currentMonthRevenue,
+      currentMonthExpense,
+      latestTransactions,
+      categoryCount,
+      transactionCount,
+    ] = await Promise.all([
+      this.getCurrentMonthRevenue(userId),
+      this.getCurrentMonthExpense(userId),
+      this.listLatestTransactions(userId),
+      this.getCategoryCount(userId),
+      this.getTransactionCount(userId),
+    ])
 
     return {
       currentMonthRevenue,
       currentMonthExpense,
       latestTransactions,
+      categoryCount,
+      transactionCount,
     }
   }
 }
