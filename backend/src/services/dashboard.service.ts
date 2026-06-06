@@ -36,15 +36,30 @@ export class DashboardService {
     return this.getCurrentMonthAmount(userId, TransactionType.EXPENSE)
   }
 
+  async listLatestTransactions(userId: string) {
+    return prismaClient.transaction.findMany({
+      where: {
+        userId,
+      },
+      take: 5,
+      orderBy: {
+        date: 'desc',
+      },
+    })
+  }
+
   async getSummary(userId: string): Promise<DashboardSummaryModel> {
-    const [currentMonthRevenue, currentMonthExpense] = await Promise.all([
-      this.getCurrentMonthRevenue(userId),
-      this.getCurrentMonthExpense(userId),
-    ])
+    const [currentMonthRevenue, currentMonthExpense, latestTransactions] =
+      await Promise.all([
+        this.getCurrentMonthRevenue(userId),
+        this.getCurrentMonthExpense(userId),
+        this.listLatestTransactions(userId),
+      ])
 
     return {
       currentMonthRevenue,
       currentMonthExpense,
+      latestTransactions,
     }
   }
 }

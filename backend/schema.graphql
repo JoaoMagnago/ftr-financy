@@ -37,6 +37,7 @@ input CreateUserInput {
 type DashboardSummaryModel {
   currentMonthExpense: Int!
   currentMonthRevenue: Int!
+  latestTransactions: [TransactionModel!]!
 }
 
 """
