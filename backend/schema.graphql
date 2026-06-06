@@ -46,6 +46,7 @@ type DashboardSummaryModel {
   currentMonthExpense: Int!
   currentMonthRevenue: Int!
   latestTransactions: [TransactionModel!]!
+  mostUsedCategory: CategoryStatisticsModel
   transactionCount: Int!
 }
 

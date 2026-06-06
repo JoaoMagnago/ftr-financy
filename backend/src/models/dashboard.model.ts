@@ -21,6 +21,9 @@ export class DashboardSummaryModel {
 
   @Field(() => Int)
   balance!: number
+
+  @Field(() => CategoryStatisticsModel, { nullable: true })
+  mostUsedCategory!: CategoryStatisticsModel | null
 }
 
 @ObjectType()

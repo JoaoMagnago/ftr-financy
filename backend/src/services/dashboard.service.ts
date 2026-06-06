@@ -121,15 +121,25 @@ export class DashboardService {
       statistics.map((item) => [item.categoryId, item]),
     )
 
-    return categories.map((category) => {
-      const stats = statisticsMap.get(category.id)
+    return categories
+      .map((category) => {
+        const stats = statisticsMap.get(category.id)
 
-      return {
-        category,
-        transactionCount: stats?._count.id ?? 0,
-        totalAmount: stats?._sum.amount ?? 0,
-      }
-    })
+        return {
+          category,
+          transactionCount: stats?._count.id ?? 0,
+          totalAmount: stats?._sum.amount ?? 0,
+        }
+      })
+      .sort((a, b) => b.transactionCount - a.transactionCount)
+  }
+
+  async getMostUsedCategory(
+    userId: string,
+  ): Promise<CategoryStatisticsModel | null> {
+    const statistics = await this.getCategoriesStatistics(userId)
+
+    return statistics[0] ?? null
   }
 
   async getSummary(userId: string): Promise<DashboardSummaryModel> {
@@ -140,6 +150,7 @@ export class DashboardService {
       latestTransactions,
       transactionCount,
       categoryCount,
+      mostUsedCategory,
     ] = await Promise.all([
       this.getBalance(userId),
       this.getCurrentMonthRevenue(userId),
@@ -147,6 +158,7 @@ export class DashboardService {
       this.listLatestTransactions(userId),
       this.getTransactionCount(userId),
       this.getCategoryCount(userId),
+      this.getMostUsedCategory(userId),
     ])
 
     return {
@@ -156,6 +168,7 @@ export class DashboardService {
       latestTransactions,
       categoryCount,
       transactionCount,
+      mostUsedCategory,
     }
   }
 }
