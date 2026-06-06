@@ -1,6 +1,5 @@
 import { TransactionType } from '@prisma/client'
 import { Field, InputType } from 'type-graphql'
-import { PaginationInput } from './general.js'
 
 @InputType()
 export class CreateTransactionInput {
@@ -39,7 +38,13 @@ export class UpdateTransactionInput {
 }
 
 @InputType()
-export class ListTransactionsInput extends PaginationInput {
+export class ListTransactionsInput {
+  @Field(() => Number, { defaultValue: 1 })
+  page!: number
+
+  @Field(() => Number, { defaultValue: 10 })
+  limit!: number
+
   @Field(() => String, { nullable: true })
   description?: string
 

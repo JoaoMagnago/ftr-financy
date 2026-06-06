@@ -39,6 +39,16 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTimeISO
 
+input ListTransactionsInput {
+  categoryId: String
+  description: String
+  limit: Float! = 10
+  month: Float
+  page: Float! = 1
+  type: TransactionType
+  year: Float
+}
+
 input LoginInput {
   email: String!
   password: String!
@@ -62,10 +72,18 @@ type Mutation {
   updateTransaction(data: UpdateTransactionInput!, id: String!): TransactionModel!
 }
 
+type PaginatedTransactionsModel {
+  items: [TransactionModel!]!
+  limit: Int!
+  page: Int!
+  pages: Int!
+  total: Int!
+}
+
 type Query {
   getUser(id: String!): UserModel!
   listCategories: [CategoryModel!]!
-  listTransactions: [TransactionModel!]!
+  listTransactions(data: ListTransactionsInput!): PaginatedTransactionsModel!
 }
 
 input RegisterInput {
@@ -91,6 +109,11 @@ type TransactionModel {
   type: String!
   updatedAt: DateTimeISO!
   userId: String!
+}
+
+enum TransactionType {
+  EXPENSE
+  REVENUE
 }
 
 input UpdateCategoryInput {

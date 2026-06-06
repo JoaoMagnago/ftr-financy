@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import 'reflect-metadata'
 
+import './graphql/enums/registerEnums.js'
+
 import { ApolloServer } from '@apollo/server'
 import express from 'express'
 import cors from 'cors'
