@@ -3,6 +3,32 @@ import { prismaClient } from '../infra/database/prisma.js'
 import { DashboardSummaryModel } from '../models/dashboard.model.js'
 
 export class DashboardService {
+  async getBalance(userId: string): Promise<number> {
+    const [revenue, expense] = await Promise.all([
+      prismaClient.transaction.aggregate({
+        where: {
+          userId,
+          type: TransactionType.REVENUE,
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
+
+      prismaClient.transaction.aggregate({
+        where: {
+          userId,
+          type: TransactionType.EXPENSE,
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
+    ])
+
+    return (revenue._sum.amount ?? 0) - (expense._sum.amount ?? 0)
+  }
+
   private async getCurrentMonthAmount(
     userId: string,
     type: TransactionType,
@@ -66,20 +92,23 @@ export class DashboardService {
 
   async getSummary(userId: string): Promise<DashboardSummaryModel> {
     const [
+      balance,
       currentMonthRevenue,
       currentMonthExpense,
       latestTransactions,
-      categoryCount,
       transactionCount,
+      categoryCount,
     ] = await Promise.all([
+      this.getBalance(userId),
       this.getCurrentMonthRevenue(userId),
       this.getCurrentMonthExpense(userId),
       this.listLatestTransactions(userId),
-      this.getCategoryCount(userId),
       this.getTransactionCount(userId),
+      this.getCategoryCount(userId),
     ])
 
     return {
+      balance,
       currentMonthRevenue,
       currentMonthExpense,
       latestTransactions,

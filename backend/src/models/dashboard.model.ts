@@ -17,4 +17,7 @@ export class DashboardSummaryModel {
 
   @Field(() => Int)
   categoryCount!: number
+
+  @Field(() => Int)
+  balance!: number
 }

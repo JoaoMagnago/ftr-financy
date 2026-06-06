@@ -35,6 +35,7 @@ input CreateUserInput {
 }
 
 type DashboardSummaryModel {
+  balance: Int!
   categoryCount: Int!
   currentMonthExpense: Int!
   currentMonthRevenue: Int!
