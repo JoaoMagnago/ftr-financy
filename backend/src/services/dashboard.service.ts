@@ -1,6 +1,9 @@
 import { TransactionType } from '@prisma/client'
 import { prismaClient } from '../infra/database/prisma.js'
-import { DashboardSummaryModel } from '../models/dashboard.model.js'
+import {
+  CategoryStatisticsModel,
+  DashboardSummaryModel,
+} from '../models/dashboard.model.js'
 
 export class DashboardService {
   async getBalance(userId: string): Promise<number> {
@@ -87,6 +90,45 @@ export class DashboardService {
       where: {
         userId,
       },
+    })
+  }
+
+  async getCategoriesStatistics(
+    userId: string,
+  ): Promise<CategoryStatisticsModel[]> {
+    const [categories, statistics] = await Promise.all([
+      prismaClient.category.findMany({
+        where: {
+          userId,
+        },
+      }),
+
+      prismaClient.transaction.groupBy({
+        by: ['categoryId'],
+        where: {
+          userId,
+        },
+        _count: {
+          id: true,
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
+    ])
+
+    const statisticsMap = new Map(
+      statistics.map((item) => [item.categoryId, item]),
+    )
+
+    return categories.map((category) => {
+      const stats = statisticsMap.get(category.id)
+
+      return {
+        category,
+        transactionCount: stats?._count.id ?? 0,
+        totalAmount: stats?._sum.amount ?? 0,
+      }
     })
   }
 
