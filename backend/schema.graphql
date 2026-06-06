@@ -34,6 +34,11 @@ input CreateUserInput {
   password: String!
 }
 
+type DashboardSummaryModel {
+  currentMonthExpense: Int!
+  currentMonthRevenue: Int!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
 """
@@ -81,6 +86,7 @@ type PaginatedTransactionsModel {
 }
 
 type Query {
+  dashboardSummary: DashboardSummaryModel!
   getUser(id: String!): UserModel!
   listCategories: [CategoryModel!]!
   listTransactions(data: ListTransactionsInput!): PaginatedTransactionsModel!
