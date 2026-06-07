@@ -37,10 +37,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { REQUIRED_FIELD_MESSAGE } from '@/constants/form'
 
 const TransactionSchema = z.object({
   type: z.enum(TransactionType),
-  description: z.string().optional(),
+  description: z.string().trim().min(1, REQUIRED_FIELD_MESSAGE),
   date: z.string(),
   amount: z.number(),
   categoryId: z.string(),

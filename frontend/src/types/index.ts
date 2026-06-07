@@ -18,6 +18,22 @@ export interface LoginInput {
   password: string
 }
 
+export interface DashboardSummary {
+  currentMonthRevenue?: number
+  currentMonthExpense?: number
+  latestTransactions?: Transaction[]
+  transactionCount?: number
+  categoryCount?: number
+  balance?: number
+  mostUsedCategory?: CategoryStatistics | null
+}
+
+export interface CategoryStatistics {
+  category: Category
+  transactionCount: number
+  totalAmount: number
+}
+
 export enum CategoryIcon {
   BRIEFCASE = 'BRIEFCASE',
   CAR = 'CAR',
@@ -59,4 +75,38 @@ export interface Category {
 export enum TransactionType {
   EXPENSE = 'EXPENSE',
   REVENUE = 'REVENUE',
+}
+
+export interface ListTransactionsInput {
+  page: number
+  limit: number
+  description?: string
+  type?: TransactionType
+  categoryId?: string
+  month?: number
+  year?: number
+}
+
+export interface Transaction {
+  id: string
+  type: TransactionType
+  amount: number
+  description: string | null
+
+  userId?: string
+  categoryId?: string
+
+  category?: Category
+
+  date: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface PaginatedTransactions {
+  items: Transaction[]
+  total: number
+  page: number
+  limit: number
+  pages: number
 }
