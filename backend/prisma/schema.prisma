@@ -63,6 +63,9 @@ model Transaction {
   @@index([categoryId])
   @@index([date])
   @@index([type])
+  @@index([userId, date])
+  @@index([userId, type])
+  @@index([userId, categoryId])
 }
 
 model Category {
