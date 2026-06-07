@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import {
   CreateCategoryInput,
   UpdateCategoryInput,
@@ -6,15 +7,26 @@ import { prismaClient } from '../infra/database/prisma.js'
 
 export class CategoryService {
   async createCategory(data: CreateCategoryInput, userId: string) {
-    return prismaClient.category.create({
-      data: {
-        name: data.name,
-        description: data.description,
-        icon: data.icon,
-        color: data.color,
-        userId,
-      },
-    })
+    try {
+      return await prismaClient.category.create({
+        data: {
+          name: data.name,
+          description: data.description,
+          icon: data.icon,
+          color: data.color,
+          userId,
+        },
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new Error('Já existe uma categoria com este nome')
+      }
+
+      throw error
+    }
   }
 
   async updateCategory(id: string, userId: string, data: UpdateCategoryInput) {
@@ -27,16 +39,27 @@ export class CategoryService {
 
     if (!category) throw new Error('Categoria não encontrada')
 
-    return prismaClient.category.update({
-      where: { id },
-      data: {
-        name: data.name,
-        description: data.description,
-        icon: data.icon,
-        color: data.color,
-        userId,
-      },
-    })
+    try {
+      return await prismaClient.category.update({
+        where: { id },
+        data: {
+          name: data.name,
+          description: data.description,
+          icon: data.icon,
+          color: data.color,
+          userId,
+        },
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new Error('Já existe uma categoria com este nome')
+      }
+
+      throw error
+    }
   }
 
   async listCategories(userId: string) {
