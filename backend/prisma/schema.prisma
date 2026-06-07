@@ -47,7 +47,7 @@ model Transaction {
   id          String          @id @default(uuid())
   date        DateTime        @default(now())
   amount      Int
-  description String?
+  description String
   type        TransactionType
 
   userId String

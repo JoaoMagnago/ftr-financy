@@ -9,8 +9,8 @@ export class CreateTransactionInput {
   @Field(() => Number)
   amount!: number
 
-  @Field(() => String, { nullable: true })
-  description?: string | null
+  @Field(() => String)
+  description!: string
 
   @Field(() => String)
   categoryId!: string
@@ -45,8 +45,8 @@ export class ListTransactionsInput {
   @Field(() => Number, { defaultValue: 10 })
   limit!: number
 
-  @Field(() => String, { nullable: true })
-  description?: string
+  @Field(() => String)
+  description!: string
 
   @Field(() => TransactionType, { nullable: true })
   type?: TransactionType

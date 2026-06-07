@@ -12,8 +12,8 @@ export class TransactionModel {
   @Field(() => Number)
   amount!: number
 
-  @Field(() => String, { nullable: true })
-  description!: string | null
+  @Field(() => String)
+  description!: string
 
   @Field(() => String)
   userId!: string
