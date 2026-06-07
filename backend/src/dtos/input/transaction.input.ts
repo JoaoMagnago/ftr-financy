@@ -28,7 +28,7 @@ export class UpdateTransactionInput {
   amount?: number
 
   @Field(() => String, { nullable: true })
-  description?: string | null
+  description?: string
 
   @Field(() => String, { nullable: true })
   categoryId?: string
@@ -45,7 +45,7 @@ export class ListTransactionsInput {
   @Field(() => Number, { defaultValue: 10 })
   limit!: number
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   description!: string
 
   @Field(() => TransactionType, { nullable: true })
