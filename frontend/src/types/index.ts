@@ -110,3 +110,10 @@ export interface PaginatedTransactions {
   limit: number
   pages: number
 }
+
+export interface MonthOption {
+  value: string
+  month?: number
+  year?: number
+  label: string
+}
