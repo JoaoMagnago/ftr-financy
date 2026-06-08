@@ -54,7 +54,7 @@ export const TimePeriodFilter = () => {
           })
         }}
       >
-        <SelectTrigger className="h-12 w-full">
+        <SelectTrigger id="time-period-select" className="h-12 w-full">
           <SelectValue />
         </SelectTrigger>
         <SelectContent

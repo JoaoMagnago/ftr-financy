@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect } from 'react'
 
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,7 +15,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '../../ui/button'
 import { Label } from '../../ui/label'
@@ -52,13 +51,15 @@ const TransactionSchema = z.object({
 type TransactionFormValues = z.infer<typeof TransactionSchema>
 
 interface TransactionModalProps {
-  transaction?: Transaction
-  children: ReactNode
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  transaction?: Transaction | null
 }
 
 export const TransactionModal = ({
+  isOpen,
   transaction,
-  children,
+  onOpenChange,
 }: TransactionModalProps) => {
   const categories = useCategoriesStore((state) => state.categories)
 
@@ -68,7 +69,6 @@ export const TransactionModal = ({
       updateTransaction: state.updateTransaction,
     })),
   )
-  const [isOpen, setIsOpen] = useState(false)
 
   const isEditing = !!transaction
 
@@ -127,7 +127,7 @@ export const TransactionModal = ({
 
   const handleClose = () => {
     reset()
-    setIsOpen(false)
+    onOpenChange(false)
   }
 
   const onSubmit = async (data: TransactionFormValues) => {
@@ -155,8 +155,7 @@ export const TransactionModal = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent handleCloseButton={handleClose}>
         <DialogHeader>
           <DialogTitle>
@@ -221,7 +220,7 @@ export const TransactionModal = ({
                     <span>R$</span>
                   </InputGroupAddon>
                   <InputGroupInput
-                    id="name"
+                    id="amount"
                     type="text"
                     placeholder="0,00"
                     value={formatCurrencyInput(amount ?? 0)}
@@ -244,7 +243,10 @@ export const TransactionModal = ({
                   <Label htmlFor="categoryId">Categoria</Label>
 
                   <Select value={value} onValueChange={onChange}>
-                    <SelectTrigger className="h-12 w-full text-md">
+                    <SelectTrigger
+                      id="categoryId"
+                      className="h-12 w-full text-md"
+                    >
                       {value ? (
                         <SelectValue />
                       ) : (

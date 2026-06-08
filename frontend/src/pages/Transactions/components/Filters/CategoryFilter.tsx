@@ -28,7 +28,7 @@ export const CategoryFilter = () => {
           })
         }}
       >
-        <SelectTrigger className="h-12 w-full">
+        <SelectTrigger id="category-select" className="h-12 w-full">
           <SelectValue />
         </SelectTrigger>
         <SelectContent

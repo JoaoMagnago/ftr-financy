@@ -38,7 +38,7 @@ export const TypeFilter = () => {
           })
         }}
       >
-        <SelectTrigger className="h-12 w-full">
+        <SelectTrigger id="type-select" className="h-12 w-full">
           <SelectValue id="type-select" />
         </SelectTrigger>
         <SelectContent
