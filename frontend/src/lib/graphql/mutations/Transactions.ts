@@ -63,3 +63,20 @@ export const UPDATE_TRANSACTION: TypedDocumentNode<
     }
   }
 `
+
+type DeleteTransactionMutationData = {
+  deleteTransaction: boolean
+}
+
+type DeleteTransactionMutationVariables = {
+  deleteTransactionId: string
+}
+
+export const DELETE_TRANSACTION: TypedDocumentNode<
+  DeleteTransactionMutationData,
+  DeleteTransactionMutationVariables
+> = gql`
+  mutation DeleteTransaction($deleteTransactionId: String!) {
+    deleteTransaction(id: $deleteTransactionId)
+  }
+`

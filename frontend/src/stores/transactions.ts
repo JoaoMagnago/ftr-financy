@@ -9,6 +9,7 @@ import { apolloClient } from '@/lib/graphql/apollo'
 import { LIST_TRANSACTIONS } from '@/lib/graphql/queries/Transactions'
 import {
   CREATE_TRANSACTION,
+  DELETE_TRANSACTION,
   UPDATE_TRANSACTION,
 } from '@/lib/graphql/mutations/Transactions'
 
@@ -21,12 +22,14 @@ interface TransactionsState {
   transactions: Transaction[]
   filters: TransactionsFilters
   loading: boolean
+  deleting: boolean
   total: number
   page: number
   pages: number
   setFilters: (filters: Partial<ListTransactionsInput>) => void
   createTransaction: (data: CreateTransactionInput) => Promise<void>
   updateTransaction: (id: string, data: UpdateTransactionInput) => Promise<void>
+  deleteTransaction: (id: string) => Promise<void>
   listTransactions: (data: ListTransactionsInput) => Promise<void>
 }
 
@@ -37,6 +40,7 @@ export const useTransactionsStore = create<TransactionsState>((set, get) => ({
     limit: 10,
   },
   loading: false,
+  deleting: false,
   page: 0,
   total: 0,
   pages: 0,
@@ -77,6 +81,26 @@ export const useTransactionsStore = create<TransactionsState>((set, get) => ({
     } catch (error) {
       console.log('Erro ao atualizar transação')
       throw error
+    }
+  },
+  deleteTransaction: async (id) => {
+    set({ deleting: true })
+
+    try {
+      await apolloClient.mutate({
+        mutation: DELETE_TRANSACTION,
+        variables: {
+          deleteTransactionId: id,
+        },
+      })
+
+      await get().listTransactions(get().filters)
+    } catch (error) {
+      console.log('Erro ao excluir transação')
+
+      throw error
+    } finally {
+      set({ deleting: false })
     }
   },
   listTransactions: async (filters) => {

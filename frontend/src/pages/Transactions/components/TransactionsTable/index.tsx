@@ -26,20 +26,24 @@ export function TransactionsTable({ className }: { className?: string }) {
   const {
     transactions,
     loading,
+    deleting,
     filters,
     totalCount,
     pages,
     setFilters,
     listTransactions,
+    deleteTransaction,
   } = useTransactionsStore(
     useShallow((state) => ({
       transactions: state.transactions,
       loading: state.loading,
+      deleting: state.deleting,
       filters: state.filters,
       totalCount: state.total,
       pages: state.pages,
       setFilters: state.setFilters,
       listTransactions: state.listTransactions,
+      deleteTransaction: state.deleteTransaction,
     })),
   )
 
@@ -157,10 +161,11 @@ export function TransactionsTable({ className }: { className?: string }) {
 
                     <TableCell className="pr-6 text-right">
                       <DeleteAndEditButtonGroup
+                        isDeleteDisabled={deleting}
                         onEdit={() => {
                           setEditingTransaction(transaction)
                         }}
-                        onDelete={() => {}}
+                        onDelete={() => deleteTransaction(transaction.id)}
                       />
                     </TableCell>
                   </TableRow>
