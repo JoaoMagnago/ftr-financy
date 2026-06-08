@@ -7,20 +7,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useCategoriesStore } from '@/stores/categories'
+import { useTransactionsStore } from '@/stores/transactions'
 
-interface CategoryFilterProps {
-  categories: {
-    id: string
-    name: string
-  }[]
-}
+export const CategoryFilter = () => {
+  const categories = useCategoriesStore((state) => state.categories)
 
-export const CategoryFilter = ({ categories }: CategoryFilterProps) => {
+  const setFilters = useTransactionsStore((state) => state.setFilters)
+
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label htmlFor="category-select">Categoria</Label>
 
-      <Select defaultValue="all">
+      <Select
+        defaultValue="all"
+        onValueChange={(value) => {
+          setFilters({
+            page: 1,
+            categoryId: value === 'all' ? undefined : value,
+          })
+        }}
+      >
         <SelectTrigger className="h-12 w-full">
           <SelectValue />
         </SelectTrigger>
