@@ -61,10 +61,10 @@ function PaginationLink({
     >
       <a
         aria-disabled={isDisabled}
-        onClick={isDisabled ? undefined : onClick}
         aria-current={isActive ? 'page' : undefined}
         data-slot="pagination-link"
         data-active={isActive}
+        onClick={isDisabled ? undefined : onClick}
         {...props}
       />
     </Button>
@@ -79,7 +79,7 @@ function PaginationPrevious({
     <PaginationLink
       aria-label="Go to previous page"
       size="default"
-      className={cn('pl-2!', className)}
+      className={cn('size-9', className)}
       {...props}
     >
       <ChevronLeftIcon data-icon="inline-start" />
@@ -97,7 +97,7 @@ function PaginationNext({
       aria-label="Go to next page"
       size="default"
       isDisabled={isDisabled}
-      className={cn('pr-2!', className)}
+      className={cn('size-9', className)}
       {...props}
     >
       <ChevronRightIcon data-icon="inline-end" />

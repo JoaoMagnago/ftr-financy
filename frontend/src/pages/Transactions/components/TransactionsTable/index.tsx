@@ -15,8 +15,8 @@ import { CustomPagination } from './CustomPagination'
 import { useEffect } from 'react'
 import { DeleteAndEditButtonGroup } from '@/components/DeleteAndEditButtonGroup'
 import { useTransactionsStore } from '@/stores/transactions'
-import { Spinner } from '@/components/ui/spinner'
 import { resolveIcon } from '@/utils/resolveIcon'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function TransactionsTable({ className }: { className?: string }) {
   const {
@@ -44,10 +44,14 @@ export function TransactionsTable({ className }: { className?: string }) {
   }, [filters, listTransactions])
 
   return (
-    <Card className={`p-0 gap-0 ${className}`}>
+    <Card className={`p-0 gap-0 w-full ${className}`}>
       <CardContent className="flex flex-col items-center justify-center p-0">
         {loading ? (
-          <Spinner />
+          <div className="flex flex-col gap-2 p-4 mt-10 w-full">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <Skeleton key={index} className="h-10" />
+            ))}
+          </div>
         ) : (
           <Table className="table-fixed w-full">
             <TableHeader>
@@ -98,7 +102,9 @@ export function TransactionsTable({ className }: { className?: string }) {
                     <TableCell className="pl-6">
                       <div className="flex items-center gap-4">
                         <div className="flex h-10 w-10 items-center justify-center rounded-md bg-(--green-light) text-(--green-base)">
-                          {transactionIcon ? <IconComponent /> : null}
+                          {transactionIcon ? (
+                            <IconComponent height={16} width={16} />
+                          ) : null}
                         </div>
 
                         <span className="text-md font-medium text-foreground">
