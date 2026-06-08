@@ -21,7 +21,7 @@ import { Button } from '../../ui/button'
 import { Plus } from 'lucide-react'
 import { Label } from '../../ui/label'
 import { Input } from '../../ui/input'
-import { TransactionType } from '@/types'
+import { TransactionType, type CreateTransactionInput } from '@/types'
 import { TransactionTypeSelector } from './components/TransactionTypeSelector'
 import { TransactionDatePicker } from './components/TransactionDatePicker'
 import {
@@ -38,6 +38,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { REQUIRED_FIELD_MESSAGE } from '@/constants/form'
+import { useTransactionsStore } from '@/stores/transactions'
+import { useShallow } from 'zustand/react/shallow'
+import { useCategoriesStore } from '@/stores/categories'
 
 const TransactionSchema = z.object({
   type: z.enum(TransactionType),
@@ -47,19 +50,16 @@ const TransactionSchema = z.object({
   categoryId: z.string(),
 })
 
-const categories = [
-  { id: '1', name: 'Alimentação' },
-  { id: '2', name: 'Transporte' },
-  { id: '3', name: 'Comida' },
-  { id: '4', name: 'Aluguel' },
-  { id: '5', name: 'Contas de casa' },
-  { id: '6', name: 'Carro' },
-  { id: '7', name: 'Investimentos' },
-]
-
 type TransactionFormValue = z.infer<typeof TransactionSchema>
 
 export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
+  const categories = useCategoriesStore((state) => state.categories)
+
+  const { createTransaction } = useTransactionsStore(
+    useShallow((state) => ({
+      createTransaction: state.createTransaction,
+    })),
+  )
   const [isOpen, setIsOpen] = useState(false)
 
   const {
@@ -105,9 +105,14 @@ export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
     setIsOpen(false)
   }
 
-  const onSubmit = (data: TransactionFormValue) => {
-    console.log(data)
-    handleClose()
+  const onSubmit = async (data: CreateTransactionInput) => {
+    try {
+      await createTransaction(data)
+
+      handleClose()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const onError = (errors: FieldErrors<TransactionFormValue>) => {

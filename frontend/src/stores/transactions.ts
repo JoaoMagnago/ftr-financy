@@ -1,7 +1,12 @@
 import { create } from 'zustand'
-import type { ListTransactionsInput, Transaction } from '@/types'
+import type {
+  CreateTransactionInput,
+  ListTransactionsInput,
+  Transaction,
+} from '@/types'
 import { apolloClient } from '@/lib/graphql/apollo'
 import { LIST_TRANSACTIONS } from '@/lib/graphql/queries/Transactions'
+import { CREATE_TRANSACTION } from '@/lib/graphql/mutations/Transactions'
 
 type TransactionsFilters = Partial<ListTransactionsInput> & {
   page: number
@@ -16,10 +21,11 @@ interface TransactionsState {
   page: number
   pages: number
   setFilters: (filters: Partial<ListTransactionsInput>) => void
+  createTransaction: (data: CreateTransactionInput) => Promise<void>
   listTransactions: (data: ListTransactionsInput) => Promise<void>
 }
 
-export const useTransactionsStore = create<TransactionsState>((set) => ({
+export const useTransactionsStore = create<TransactionsState>((set, get) => ({
   transactions: [],
   filters: {
     page: 1,
@@ -37,6 +43,21 @@ export const useTransactionsStore = create<TransactionsState>((set) => ({
       },
     }))
   },
+  createTransaction: async (transactionData) => {
+    try {
+      await apolloClient.mutate({
+        mutation: CREATE_TRANSACTION,
+        variables: {
+          data: transactionData,
+        },
+      })
+
+      await get().listTransactions(get().filters)
+    } catch (error) {
+      console.log('Erro ao criar transação')
+      throw error
+    }
+  },
   listTransactions: async (filters) => {
     set({ loading: true })
 
@@ -44,8 +65,9 @@ export const useTransactionsStore = create<TransactionsState>((set) => ({
       const { data } = await apolloClient.query({
         query: LIST_TRANSACTIONS,
         variables: {
-          filters: filters,
+          filters,
         },
+        fetchPolicy: 'network-only',
       })
 
       const transactions = data?.listTransactions
