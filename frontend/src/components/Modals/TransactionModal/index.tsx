@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,10 +18,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '../../ui/button'
-import { Plus } from 'lucide-react'
 import { Label } from '../../ui/label'
 import { Input } from '../../ui/input'
-import { TransactionType, type CreateTransactionInput } from '@/types'
+import { TransactionType, type Transaction } from '@/types'
 import { TransactionTypeSelector } from './components/TransactionTypeSelector'
 import { TransactionDatePicker } from './components/TransactionDatePicker'
 import {
@@ -50,17 +49,28 @@ const TransactionSchema = z.object({
   categoryId: z.string(),
 })
 
-type TransactionFormValue = z.infer<typeof TransactionSchema>
+type TransactionFormValues = z.infer<typeof TransactionSchema>
 
-export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
+interface TransactionModalProps {
+  transaction?: Transaction
+  children: ReactNode
+}
+
+export const TransactionModal = ({
+  transaction,
+  children,
+}: TransactionModalProps) => {
   const categories = useCategoriesStore((state) => state.categories)
 
-  const { createTransaction } = useTransactionsStore(
+  const { createTransaction, updateTransaction } = useTransactionsStore(
     useShallow((state) => ({
       createTransaction: state.createTransaction,
+      updateTransaction: state.updateTransaction,
     })),
   )
   const [isOpen, setIsOpen] = useState(false)
+
+  const isEditing = !!transaction
 
   const {
     control,
@@ -69,15 +79,30 @@ export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
     setFocus,
     setValue,
     handleSubmit,
-  } = useForm<TransactionFormValue>({
+  } = useForm<TransactionFormValues>({
     resolver: zodResolver(TransactionSchema),
     defaultValues: {
-      description: '',
-      amount: 0,
-      type: TransactionType.EXPENSE,
-      date: new Date().toISOString(),
+      type: transaction?.type ?? TransactionType.EXPENSE,
+      amount: transaction?.amount ?? 0,
+      categoryId: transaction?.category?.id ?? '',
+      description: transaction?.description ?? '',
+      date: transaction?.date
+        ? new Date(transaction.date).toISOString()
+        : new Date().toISOString(),
     },
   })
+
+  useEffect(() => {
+    if (!transaction) return
+
+    reset({
+      type: transaction.type ?? TransactionType.EXPENSE,
+      amount: transaction.amount ?? 0,
+      categoryId: transaction.category?.id ?? '',
+      description: transaction.description ?? '',
+      date: new Date(transaction.date).toISOString(),
+    })
+  }, [transaction, reset])
 
   const amount = useWatch({
     control: control,
@@ -105,9 +130,13 @@ export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
     setIsOpen(false)
   }
 
-  const onSubmit = async (data: CreateTransactionInput) => {
+  const onSubmit = async (data: TransactionFormValues) => {
     try {
-      await createTransaction(data)
+      if (transaction) {
+        await updateTransaction(transaction.id, data)
+      } else {
+        await createTransaction(data)
+      }
 
       handleClose()
     } catch (error) {
@@ -115,11 +144,11 @@ export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
     }
   }
 
-  const onError = (errors: FieldErrors<TransactionFormValue>) => {
+  const onError = (errors: FieldErrors<TransactionFormValues>) => {
     const firstErrorField = Object.keys(errors)[0]
 
     if (firstErrorField) {
-      setFocus(firstErrorField as keyof TransactionFormValue)
+      setFocus(firstErrorField as keyof TransactionFormValues)
     }
 
     console.error(errors)
@@ -127,12 +156,7 @@ export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus />
-          <span>Nova transação</span>
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent handleCloseButton={handleClose}>
         <DialogHeader>
           <DialogTitle>
@@ -142,7 +166,7 @@ export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
         </DialogHeader>
 
         <form
-          id="Transaction-form"
+          id="transaction-form"
           noValidate
           className="flex flex-col gap-6"
           onSubmit={handleSubmit(onSubmit, onError)}
@@ -249,7 +273,7 @@ export const TransactionModal = ({ isEditing }: { isEditing: boolean }) => {
         </form>
 
         <Button
-          form="Transaction-form"
+          form="transaction-form"
           type="submit"
           size="xl"
           className="w-full"

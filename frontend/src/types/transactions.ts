@@ -39,6 +39,8 @@ export interface CreateTransactionInput {
   date: string
 }
 
+export type UpdateTransactionInput = Partial<CreateTransactionInput>
+
 export interface PaginatedTransactions {
   items: Transaction[]
   total: number

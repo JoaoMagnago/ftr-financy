@@ -8,17 +8,27 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { TransactionType } from '@/types'
-import { CircleArrowDown, CircleArrowUp, DollarSign } from 'lucide-react'
+import { TransactionType, type Transaction } from '@/types'
+import {
+  CircleArrowDown,
+  CircleArrowUp,
+  DollarSign,
+  SquarePen,
+  Trash,
+} from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
 import { CustomPagination } from './CustomPagination'
-import { useEffect } from 'react'
-import { DeleteAndEditButtonGroup } from '@/components/DeleteAndEditButtonGroup'
+import { useEffect, useState } from 'react'
 import { useTransactionsStore } from '@/stores/transactions'
 import { resolveIcon } from '@/utils/resolveIcon'
 import { Skeleton } from '@/components/ui/skeleton'
+import { TransactionModal } from '@/components/Modals/TransactionModal'
+import { Button } from '@/components/ui/button'
 
 export function TransactionsTable({ className }: { className?: string }) {
+  const [editingTransaction, setEditingTransaction] =
+    useState<Transaction | null>(null)
+
   const {
     transactions,
     loading,
@@ -42,6 +52,19 @@ export function TransactionsTable({ className }: { className?: string }) {
   useEffect(() => {
     listTransactions(filters)
   }, [filters, listTransactions])
+
+  const onEdit = () => {}
+  const onDelete = () => {}
+
+  // Find a better way to add transaction modal to table without creating 10 instances
+
+  const EditTransactionModal = editingTransaction ? (
+    <TransactionModal transaction={editingTransaction}>
+      <Button variant="outline" size="icon-sm" onClick={onEdit}>
+        <SquarePen className="text-(--icon-button-foreground)" />
+      </Button>
+    </TransactionModal>
+  ) : null
 
   return (
     <Card className={`p-0 gap-0 w-full ${className}`}>
@@ -152,10 +175,26 @@ export function TransactionsTable({ className }: { className?: string }) {
                     </TableCell>
 
                     <TableCell className="pr-6 text-right">
-                      <DeleteAndEditButtonGroup
-                        onDelete={() => {}}
-                        onEdit={() => {}}
-                      />
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon-sm"
+                          onClick={onDelete}
+                        >
+                          <Trash className="text-(--danger)" />
+                        </Button>
+                        {editingTransaction ? (
+                          EditTransactionModal
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="icon-sm"
+                            onClick={() => setEditingTransaction(transaction)}
+                          >
+                            <SquarePen className="text-(--icon-button-foreground)" />
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 )

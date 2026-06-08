@@ -3,10 +3,14 @@ import type {
   CreateTransactionInput,
   ListTransactionsInput,
   Transaction,
+  UpdateTransactionInput,
 } from '@/types'
 import { apolloClient } from '@/lib/graphql/apollo'
 import { LIST_TRANSACTIONS } from '@/lib/graphql/queries/Transactions'
-import { CREATE_TRANSACTION } from '@/lib/graphql/mutations/Transactions'
+import {
+  CREATE_TRANSACTION,
+  UPDATE_TRANSACTION,
+} from '@/lib/graphql/mutations/Transactions'
 
 type TransactionsFilters = Partial<ListTransactionsInput> & {
   page: number
@@ -22,6 +26,7 @@ interface TransactionsState {
   pages: number
   setFilters: (filters: Partial<ListTransactionsInput>) => void
   createTransaction: (data: CreateTransactionInput) => Promise<void>
+  updateTransaction: (id: string, data: UpdateTransactionInput) => Promise<void>
   listTransactions: (data: ListTransactionsInput) => Promise<void>
 }
 
@@ -55,6 +60,22 @@ export const useTransactionsStore = create<TransactionsState>((set, get) => ({
       await get().listTransactions(get().filters)
     } catch (error) {
       console.log('Erro ao criar transação')
+      throw error
+    }
+  },
+  updateTransaction: async (id, transactionData) => {
+    try {
+      await apolloClient.mutate({
+        mutation: UPDATE_TRANSACTION,
+        variables: {
+          updateTransactionId: id,
+          updateTransactionData: transactionData,
+        },
+      })
+
+      await get().listTransactions(get().filters)
+    } catch (error) {
+      console.log('Erro ao atualizar transação')
       throw error
     }
   },
