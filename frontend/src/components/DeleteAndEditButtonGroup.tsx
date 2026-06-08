@@ -6,7 +6,7 @@ export const DeleteAndEditButtonGroup = ({
   onDelete,
   onEdit,
 }: {
-  isDeleteDisabled: boolean
+  isDeleteDisabled?: boolean
   onDelete: () => void
   onEdit: () => void
 }) => {

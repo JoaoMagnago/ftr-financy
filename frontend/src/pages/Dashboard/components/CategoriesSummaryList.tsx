@@ -1,7 +1,8 @@
 import { CategoryLabel } from '@/components/CategoryLabel'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { CategoryIcon } from '@/types'
+import { CategoryColor, CategoryIcon } from '@/types'
+import { resolveColor } from '@/utils/resolveColor'
 import { ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -87,13 +88,15 @@ export const CategoriesSummaryList = ({
             currency: 'BRL',
           }).format(Number(category.totalAmount) / 100)
 
+          const colors = resolveColor(CategoryColor.GREEN)
+
           return (
             <div
               key={category.id}
               className="grid grid-cols-[1fr_auto] items-center"
             >
               <div className="flex items-center justify-between">
-                <CategoryLabel name={category.name} />
+                <CategoryLabel name={category.name} colors={colors} />
                 <span className="text-sm text-muted-foreground">
                   {category.amountItems} itens
                 </span>

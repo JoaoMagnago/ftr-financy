@@ -1,4 +1,4 @@
 export * from './auth'
-export * from './dashboards'
+export * from './dashboard'
 export * from './transactions'
 export * from './categories'

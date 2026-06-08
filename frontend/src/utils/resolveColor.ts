@@ -1,52 +1,52 @@
 import { CategoryColor } from '@/types'
 
-type ResolveColorsOutput = {
-  dark: string
-  base: string
-  light: string
+export type ResolveColorsOutput = {
+  darkText: string
+  baseText: string
+  lightBg: string
 }
 
 const categoryColors: Record<CategoryColor, ResolveColorsOutput> = {
   [CategoryColor.GREEN]: {
-    dark: '--green-dark',
-    base: '--green-base',
-    light: '--green-light',
+    darkText: 'text-(--green-dark)',
+    baseText: 'text-(--green-base)',
+    lightBg: 'bg-(--green-light)',
   },
 
   [CategoryColor.BLUE]: {
-    dark: '--blue-dark',
-    base: '--blue-base',
-    light: '--blue-light',
+    darkText: 'text-(--blue-dark)',
+    baseText: 'text-(--blue-base)',
+    lightBg: 'bg-(--blue-light)',
   },
 
   [CategoryColor.PURPLE]: {
-    dark: '--purple-dark',
-    base: '--purple-base',
-    light: '--purple-light',
+    darkText: 'text-(--purple-dark)',
+    baseText: 'text-(--purple-base)',
+    lightBg: 'bg-(--purple-light)',
   },
 
   [CategoryColor.PINK]: {
-    dark: '--pink-dark',
-    base: '--pink-base',
-    light: '--pink-light',
+    darkText: 'text-(--pink-dark)',
+    baseText: 'text-(--pink-base)',
+    lightBg: 'bg-(--pink-light)',
   },
 
   [CategoryColor.RED]: {
-    dark: '--red-dark',
-    base: '--red-base',
-    light: '--red-light',
+    darkText: 'text-(--red-dark)',
+    baseText: 'text-(--red-base)',
+    lightBg: 'bg-(--red-light)',
   },
 
   [CategoryColor.ORANGE]: {
-    dark: '--orange-dark',
-    base: '--orange-base',
-    light: '--orange-light',
+    darkText: 'text-(--orange-dark)',
+    baseText: 'text-(--orange-base)',
+    lightBg: 'bg-(--orange-light)',
   },
 
   [CategoryColor.YELLOW]: {
-    dark: '--yellow-dark',
-    base: '--yellow-base',
-    light: '--yellow-light',
+    darkText: 'text-(--yellow-dark)',
+    baseText: 'text-(--yellow-base)',
+    lightBg: 'bg-(--yellow-light)',
   },
 }
 

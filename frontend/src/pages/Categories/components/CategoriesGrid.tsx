@@ -34,10 +34,10 @@ const CategoryCard = ({
       <CardContent className="flex flex-col gap-5">
         <div className="flex items-start justify-between w-full">
           <div
-            className={`flex items-center justify-center w-10 h-10 rounded-md bg-(${colors.light})`}
+            className={`flex items-center justify-center w-10 h-10 rounded-md ${colors.lightBg}`}
           >
             {createElement(resolveIcon(icon ?? CategoryIcon.BRIEFCASE), {
-              className: `text-(${colors.base})`,
+              className: colors.lightBg,
             })}
           </div>
 
@@ -50,7 +50,7 @@ const CategoryCard = ({
         </div>
 
         <div className="flex items-center justify-between">
-          <CategoryLabel name={name ?? 'Categoria'} />
+          <CategoryLabel name={name ?? 'Categoria'} colors={colors} />
           <span className="text-sm text-muted-foreground">
             {amountItems}
             {` ite${amountItems > 1 ? 'ns' : 'm'}`}

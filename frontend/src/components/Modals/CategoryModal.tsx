@@ -176,7 +176,7 @@ export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
                         <div
                           className="h-5 w-full rounded-sm"
                           style={{
-                            backgroundColor: `var(${colors.base})`,
+                            backgroundColor: colors.lightBg,
                           }}
                         />
                       </div>

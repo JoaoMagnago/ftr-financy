@@ -10,7 +10,7 @@ export const Navbar = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const isDashboardsPage = location.pathname === '/'
+  const isDashboardPage = location.pathname === '/'
   const isTransactionsPage = location.pathname === '/transactions'
   const isCategoriesPage = location.pathname === '/categories'
 
@@ -30,9 +30,9 @@ export const Navbar = () => {
               asChild
               size="sm"
               variant="link"
-              className={isDashboardsPage ? 'font-semibold text-primary' : ''}
+              className={isDashboardPage ? 'font-semibold text-primary' : ''}
             >
-              <Link to="/">Dashboards</Link>
+              <Link to="/">Dashboard</Link>
             </Button>
 
             <Button

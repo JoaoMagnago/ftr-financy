@@ -3,7 +3,7 @@ import { Layout } from './components/Layout'
 import { Login } from './pages/Auth/Login'
 import { Signup } from './pages/Auth/Signup'
 import { useAuthStore } from './stores/auth'
-import { Dashboards } from './pages/Dashboards'
+import { Dashboard } from './pages/Dashboard'
 import { Profile } from './pages/Profile'
 import { Categories } from './pages/Categories'
 import { Transactions } from './pages/Transactions'
@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route
           path={'/'}
-          element={isAuthenticated ? <Dashboards /> : <Login />}
+          element={isAuthenticated ? <Dashboard /> : <Login />}
         />
         <Route path={'/signup'} element={<Signup />} />
         <Route path={'/transactions'} element={<Transactions />} />

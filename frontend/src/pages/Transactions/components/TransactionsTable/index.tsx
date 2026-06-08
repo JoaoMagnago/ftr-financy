@@ -8,16 +8,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { TransactionType, type Transaction } from '@/types'
+import { CategoryColor, TransactionType, type Transaction } from '@/types'
 import { CircleArrowDown, CircleArrowUp, DollarSign } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
 import { CustomPagination } from './CustomPagination'
-import { useEffect, useState } from 'react'
+import { createElement, useEffect, useState } from 'react'
 import { useTransactionsStore } from '@/stores/transactions'
 import { resolveIcon } from '@/utils/resolveIcon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TransactionModal } from '@/components/Modals/TransactionModal'
 import { DeleteAndEditButtonGroup } from '@/components/DeleteAndEditButtonGroup'
+import { resolveColor } from '@/utils/resolveColor'
 
 export function TransactionsTable({ className }: { className?: string }) {
   const [editingTransaction, setEditingTransaction] =
@@ -79,10 +80,11 @@ export function TransactionsTable({ className }: { className?: string }) {
             <TableBody className="border-b border-border">
               {transactions.map((transaction) => {
                 const transactionIcon = transaction.category?.icon
-
-                const IconComponent = transactionIcon
-                  ? resolveIcon(transactionIcon)
-                  : DollarSign
+                const colors = resolveColor(
+                  transaction.category?.color
+                    ? (transaction.category?.color as CategoryColor)
+                    : CategoryColor.GREEN,
+                )
 
                 const dateFormatted = transaction.createdAt
                   ? new Date(transaction.createdAt).toLocaleDateString(
@@ -109,10 +111,18 @@ export function TransactionsTable({ className }: { className?: string }) {
                   >
                     <TableCell className="pl-6">
                       <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-(--green-light) text-(--green-base)">
+                        <div
+                          className={`flex h-10 w-10 items-center justify-center rounded-md ${colors.lightBg}`}
+                        >
                           {transactionIcon ? (
-                            <IconComponent height={16} width={16} />
-                          ) : null}
+                            createElement(resolveIcon(transactionIcon), {
+                              className: colors.baseText,
+                              height: 16,
+                              width: 16,
+                            })
+                          ) : (
+                            <DollarSign />
+                          )}
                         </div>
 
                         <span className="text-md font-medium text-foreground">
@@ -131,6 +141,7 @@ export function TransactionsTable({ className }: { className?: string }) {
                       <div className="flex items-center justify-center">
                         <CategoryLabel
                           name={transaction.category?.name ?? 'Sem categoria'}
+                          colors={colors}
                         />
                       </div>
                     </TableCell>

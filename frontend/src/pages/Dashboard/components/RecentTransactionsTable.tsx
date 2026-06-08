@@ -2,86 +2,26 @@ import { CategoryLabel } from '@/components/CategoryLabel'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { TransactionType } from '@/types'
+import { useDashboardStore } from '@/stores/dashboard'
+import { CategoryColor, TransactionType } from '@/types'
+import { resolveColor } from '@/utils/resolveColor'
+import { resolveIcon } from '@/utils/resolveIcon'
 import {
-  BriefcaseBusiness,
   ChevronRight,
   CircleArrowDown,
   CircleArrowUp,
+  DollarSign,
   Plus,
 } from 'lucide-react'
+import { createElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function RecentTransactionsTable({ className }: { className?: string }) {
   const navigate = useNavigate()
 
-  const transactions = [
-    {
-      id: '1',
-      name: 'Pagamento de salário',
-      type: TransactionType.REVENUE,
-      amount: '425000',
-      createdAt: '2025-01-15T08:30:00.000Z',
-      category: {
-        id: '1',
-        name: 'Receita',
-        color: 'red',
-        icon: <BriefcaseBusiness className="w-4" />,
-      },
-    },
-    {
-      id: '2',
-      name: 'Jantar no restaurante',
-      type: TransactionType.EXPENSE,
-      amount: '8950',
-      createdAt: '2025-03-22T14:45:10.250Z',
-      category: {
-        id: '1',
-        name: 'Alimentação',
-        color: 'red',
-        icon: <BriefcaseBusiness className="w-4" />,
-      },
-    },
-    {
-      id: '3',
-      name: 'Posto de gasolina',
-      type: TransactionType.EXPENSE,
-      amount: '10000',
-      createdAt: '2025-06-01T00:00:00.000Z',
-      category: {
-        id: '1',
-        name: 'Transporte',
-        color: 'red',
-        icon: <BriefcaseBusiness className="w-4" />,
-      },
-    },
-    {
-      id: '4',
-      name: 'Compras no mercado',
-      type: TransactionType.EXPENSE,
-      amount: '15680',
-      createdAt: '2025-09-10T19:05:42.999Z',
-      category: {
-        id: '1',
-        name: 'Mercado',
-        color: 'red',
-        icon: <BriefcaseBusiness className="w-4" />,
-      },
-    },
-    {
-      id: '5',
-      name: 'Retorno de investimento',
-      type: TransactionType.REVENUE,
-      amount: '34025',
-      createdAt: '2025-12-31T23:59:59.999Z',
-      category: {
-        id: '1',
-        name: 'Investimento',
-        color: 'red',
-        icon: <BriefcaseBusiness className="w-4" />,
-      },
-    },
-  ]
+  const latestTransactions =
+    useDashboardStore((state) => state.dashboardSummary)?.latestTransactions ??
+    []
 
   return (
     <Card className={`p-0 gap-0 ${className}`}>
@@ -100,14 +40,21 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
       <CardContent className="flex flex-col items-center justify-center p-0">
         <Table className="table-fixed w-full">
           <TableBody className="border-b border-border">
-            {transactions.map((transaction) => {
-              const dateFormatted = new Date(
-                transaction.createdAt,
-              ).toLocaleDateString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: '2-digit',
-              })
+            {latestTransactions.map((transaction) => {
+              const transactionIcon = transaction.category?.icon
+              const colors = resolveColor(
+                transaction.category?.color
+                  ? (transaction.category?.color as CategoryColor)
+                  : CategoryColor.GREEN,
+              )
+
+              const dateFormatted = transaction.createdAt
+                ? new Date(transaction.createdAt).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: '2-digit',
+                  })
+                : 'Sem data'
 
               const isExpense = transaction.type === TransactionType.EXPENSE
 
@@ -120,13 +67,23 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
                 <TableRow key={transaction.id} className="hover:bg-transparent">
                   <TableCell className="pl-6 w-[60%]">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-(--green-light) text-(--green-base)">
-                        {transaction.category.icon}
+                      <div
+                        className={`flex h-10 w-10 items-center justify-center rounded-md ${colors.lightBg}`}
+                      >
+                        {transactionIcon ? (
+                          createElement(resolveIcon(transactionIcon), {
+                            className: colors.baseText,
+                            height: 16,
+                            width: 16,
+                          })
+                        ) : (
+                          <DollarSign />
+                        )}
                       </div>
 
                       <div className="flex flex-col gap-0.5">
                         <span className="text-md font-medium text-foreground">
-                          {transaction.name}
+                          {transaction.description}
                         </span>
                         <span className="text-sm text-muted-foreground">
                           {dateFormatted}
@@ -137,7 +94,10 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
 
                   <TableCell className="w-[20%]">
                     <div className="flex items-center justify-center">
-                      <CategoryLabel name={transaction.category.name} />
+                      <CategoryLabel
+                        name={transaction.category?.name ?? 'Categoria'}
+                        colors={colors}
+                      />
                     </div>
                   </TableCell>
 
