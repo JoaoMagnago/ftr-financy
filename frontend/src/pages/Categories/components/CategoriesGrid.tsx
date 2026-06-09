@@ -1,12 +1,18 @@
 import { CategoryLabel } from '@/components/CategoryLabel'
 import { DeleteAndEditButtonGroup } from '@/components/DeleteAndEditButtonGroup'
+import { CategoryModal } from '@/components/Modals/CategoryModal'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCategoriesStore } from '@/stores/categories'
-import { CategoryColor, CategoryIcon, type CategoryListItem } from '@/types'
+import {
+  CategoryColor,
+  CategoryIcon,
+  type Category,
+  type CategoryListItem,
+} from '@/types'
 import { resolveColor } from '@/utils/resolveColor'
 import { resolveIcon } from '@/utils/resolveIcon'
-import { createElement, useEffect } from 'react'
+import { createElement, useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 export const CategoriesGrid = () => {
@@ -17,6 +23,8 @@ export const CategoriesGrid = () => {
       listCategories: state.listCategories,
     })),
   )
+
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
 
   useEffect(() => {
     if (categories.length === 0) {
@@ -30,27 +38,31 @@ export const CategoriesGrid = () => {
         ? Array.from({ length: 8 }).map((_, index) => (
             <Skeleton key={index} className="h-50" />
           ))
-        : categories.map((item) => (
+        : categories.map((category) => (
             <CategoryCard
-              key={item.id}
-              name={item.name}
-              description={item.description}
-              icon={item.icon}
-              color={item.color}
-              transactionCount={item.transactionCount}
+              key={category.id}
+              category={category}
+              setEditingCategory={() => setEditingCategory(category)}
             />
           ))}
+
+      <CategoryModal
+        isOpen={!!editingCategory}
+        category={editingCategory}
+        onOpenChange={() => setEditingCategory(null)}
+      />
     </div>
   )
 }
 
-const CategoryCard = ({
-  name,
-  description,
-  icon,
-  color,
-  transactionCount,
-}: Partial<CategoryListItem>) => {
+type CategoryCardProps = {
+  category: Partial<CategoryListItem>
+  setEditingCategory: () => void
+}
+
+const CategoryCard = ({ category, setEditingCategory }: CategoryCardProps) => {
+  const { name, description, icon, color, transactionCount } = category
+
   const colors = resolveColor(
     color ? (color as CategoryColor) : CategoryColor.GREEN,
   )
@@ -69,7 +81,10 @@ const CategoryCard = ({
             })}
           </div>
 
-          <DeleteAndEditButtonGroup onDelete={() => {}} onEdit={() => {}} />
+          <DeleteAndEditButtonGroup
+            onEdit={setEditingCategory}
+            onDelete={() => {}}
+          />
         </div>
 
         <div className="flex flex-col gap-1">

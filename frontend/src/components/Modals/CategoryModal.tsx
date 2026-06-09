@@ -31,7 +31,7 @@ type CategoryFormValue = z.infer<typeof categorySchema>
 
 interface CategoryModalPart {
   isOpen: boolean
-  category?: Category
+  category?: Category | null
   onOpenChange: (open: boolean) => void
 }
 
@@ -67,7 +67,7 @@ export const CategoryModal = ({
       color: category?.color
         ? (category.color as CategoryColor)
         : CategoryColor.GREEN,
-      icon: category?.icon ? category.icon : CategoryIcon.BAGGAGE,
+      icon: category?.icon ? category.icon : CategoryIcon.BRIEFCASE,
     },
   })
 
@@ -80,7 +80,7 @@ export const CategoryModal = ({
       color: category?.color
         ? (category.color as CategoryColor)
         : CategoryColor.GREEN,
-      icon: category?.icon ? category.icon : CategoryIcon.BAGGAGE,
+      icon: category?.icon ? category.icon : CategoryIcon.BRIEFCASE,
     })
   }, [category, reset])
 
@@ -117,7 +117,12 @@ export const CategoryModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent handleCloseButton={handleClose}>
+      <DialogContent
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
+        }}
+        handleCloseButton={handleClose}
+      >
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Editar categoria' : 'Nova categoria'}
