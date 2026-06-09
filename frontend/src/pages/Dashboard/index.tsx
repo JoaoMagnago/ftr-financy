@@ -6,6 +6,7 @@ import { useDashboardStore } from '@/stores/dashboard'
 import { useShallow } from 'zustand/react/shallow'
 import { useEffect } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useTransactionsStore } from '@/stores/transactions'
 
 export const Dashboard = () => {
   const { dashboardSummary, loading, getDashboardSummary } = useDashboardStore(
@@ -16,9 +17,11 @@ export const Dashboard = () => {
     })),
   )
 
+  const transactions = useTransactionsStore((state) => state.transactions)
+
   useEffect(() => {
     getDashboardSummary()
-  }, [getDashboardSummary])
+  }, [transactions, getDashboardSummary])
 
   return (
     <div className="grid grid-cols-3 gap-6">

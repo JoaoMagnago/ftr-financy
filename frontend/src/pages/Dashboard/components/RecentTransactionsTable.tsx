@@ -1,4 +1,5 @@
 import { CategoryLabel } from '@/components/CategoryLabel'
+import { TransactionModal } from '@/components/Modals/TransactionModal'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
@@ -13,11 +14,13 @@ import {
   DollarSign,
   Plus,
 } from 'lucide-react'
-import { createElement } from 'react'
+import { createElement, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function RecentTransactionsTable({ className }: { className?: string }) {
   const navigate = useNavigate()
+
+  const [isOpen, onOpenChange] = useState(false)
 
   const latestTransactions =
     useDashboardStore((state) => state.dashboardSummary)?.latestTransactions ??
@@ -123,10 +126,13 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
           <Button
             variant="link"
             className="text-primary gap-1 hover:no-underline"
+            onClick={() => onOpenChange(true)}
           >
             <Plus />
             <span>Nova transação</span>
           </Button>
+
+          <TransactionModal isOpen={isOpen} onOpenChange={onOpenChange} />
         </div>
       </CardContent>
     </Card>
