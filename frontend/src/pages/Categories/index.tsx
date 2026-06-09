@@ -5,8 +5,11 @@ import { CategoryModal } from '@/components/Modals/CategoryModal'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
+import { useCategoriesStore } from '@/stores/categories'
 
 export const Categories = () => {
+  const categories = useCategoriesStore((state) => state.categories)
+
   const [isOpen, onOpenChange] = useState(false)
 
   return (
@@ -26,7 +29,7 @@ export const Categories = () => {
         }
       />
 
-      <CategoriesNumberCards />
+      {categories.length > 0 && <CategoriesNumberCards />}
 
       <CategoriesGrid />
     </div>

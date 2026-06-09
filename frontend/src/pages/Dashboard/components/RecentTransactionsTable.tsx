@@ -3,6 +3,12 @@ import { TransactionModal } from '@/components/Modals/TransactionModal'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { useCategoriesStore } from '@/stores/categories'
 import { useDashboardStore } from '@/stores/dashboard'
 import { CategoryColor, TransactionType } from '@/types'
 import { resolveColor } from '@/utils/resolveColor'
@@ -20,11 +26,15 @@ import { useNavigate } from 'react-router-dom'
 export function RecentTransactionsTable({ className }: { className?: string }) {
   const navigate = useNavigate()
 
-  const [isOpen, onOpenChange] = useState(false)
-
   const latestTransactions =
     useDashboardStore((state) => state.dashboardSummary)?.latestTransactions ??
     []
+
+  const categories = useCategoriesStore((state) => state.categories)
+
+  const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false)
+  const [isNewTransactionTooltipOpen, setIsTransactionTooltipOpen] =
+    useState(false)
 
   return (
     <Card className={`p-0 gap-0 ${className}`}>
@@ -123,16 +133,38 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
           </TableBody>
         </Table>
         <div className="flex justify-center py-5 w-full">
-          <Button
-            variant="link"
-            className="text-primary gap-1 hover:no-underline"
-            onClick={() => onOpenChange(true)}
-          >
-            <Plus />
-            <span>Nova transação</span>
-          </Button>
+          <Tooltip open={isNewTransactionTooltipOpen}>
+            <TooltipTrigger asChild>
+              <span className="inline-block w-fit">
+                <Button
+                  variant="link"
+                  className="text-primary gap-1 hover:no-underline"
+                  disabled={categories.length === 0}
+                  onMouseOver={() => {
+                    if (categories.length === 0) {
+                      setIsTransactionTooltipOpen(true)
+                    }
+                  }}
+                  onMouseOut={() => {
+                    setIsTransactionTooltipOpen(false)
+                  }}
+                  onClick={() => setIsTransactionModalOpen(true)}
+                >
+                  <Plus />
+                  <span>Nova transação</span>
+                </Button>
+              </span>
+            </TooltipTrigger>
 
-          <TransactionModal isOpen={isOpen} onOpenChange={onOpenChange} />
+            <TooltipContent side={'bottom'}>
+              <p>Crie ao menos uma categoria antes de criar uma transação</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <TransactionModal
+            isOpen={isTransactionModalOpen}
+            onOpenChange={setIsTransactionModalOpen}
+          />
         </div>
       </CardContent>
     </Card>

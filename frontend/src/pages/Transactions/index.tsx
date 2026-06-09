@@ -7,6 +7,11 @@ import { useCategoriesStore } from '@/stores/categories'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 export const Transactions = () => {
   const { categories, listCategories } = useCategoriesStore(
@@ -16,10 +21,12 @@ export const Transactions = () => {
     })),
   )
 
-  const [isOpen, onOpenChange] = useState(false)
+  const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false)
+  const [isNewTransactionTooltipOpen, setIsTransactionTooltipOpen] =
+    useState(false)
 
   useEffect(() => {
-    if (!categories) {
+    if (categories.length === 0) {
       listCategories()
     }
   }, [categories, listCategories])
@@ -31,12 +38,36 @@ export const Transactions = () => {
         description="Gerencie todas as suas transações financeiras"
         rightElement={
           <div>
-            <Button onClick={() => onOpenChange(true)}>
-              <Plus />
-              <span>Nova transação</span>
-            </Button>
+            <Tooltip open={isNewTransactionTooltipOpen}>
+              <TooltipTrigger asChild>
+                <span className="inline-block w-fit">
+                  <Button
+                    disabled={categories.length === 0}
+                    onMouseOver={() => {
+                      if (categories.length === 0) {
+                        setIsTransactionTooltipOpen(true)
+                      }
+                    }}
+                    onMouseOut={() => {
+                      setIsTransactionTooltipOpen(false)
+                    }}
+                    onClick={() => setIsTransactionModalOpen(true)}
+                  >
+                    <Plus />
+                    <span>Nova transação</span>
+                  </Button>
+                </span>
+              </TooltipTrigger>
 
-            <TransactionModal isOpen={isOpen} onOpenChange={onOpenChange} />
+              <TooltipContent side={'left'}>
+                <p>Crie ao menos uma categoria antes de criar uma transação</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <TransactionModal
+              isOpen={isTransactionModalOpen}
+              onOpenChange={setIsTransactionModalOpen}
+            />
           </div>
         }
       />
