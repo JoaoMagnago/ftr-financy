@@ -1,7 +1,7 @@
 import { CircleArrowDown, CircleArrowUp, Wallet } from 'lucide-react'
 import { DashboardNumberCard } from './components/DashboardNumberCard'
 import { RecentTransactionsTable } from './components/RecentTransactionsTable'
-import { CategoriesSummaryList } from './components/CategoriesSummaryList'
+import { CategoriesStatisticsList } from './components/CategoriesSummaryList'
 import { useDashboardStore } from '@/stores/dashboard'
 import { useShallow } from 'zustand/react/shallow'
 import { useEffect } from 'react'
@@ -9,11 +9,19 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useTransactionsStore } from '@/stores/transactions'
 
 export const Dashboard = () => {
-  const { dashboardSummary, loading, getDashboardSummary } = useDashboardStore(
+  const {
+    dashboardSummary,
+    loadingDashboard,
+    loadingStatistics,
+    getDashboardSummary,
+    getCategoriesStatistics,
+  } = useDashboardStore(
     useShallow((state) => ({
       dashboardSummary: state.dashboardSummary,
-      loading: state.loading,
+      loadingDashboard: state.loadingDashboard,
+      loadingStatistics: state.loadingStatistics,
       getDashboardSummary: state.getDashboardSummary,
+      getCategoriesStatistics: state.getCategoriesStatistics,
     })),
   )
 
@@ -21,11 +29,12 @@ export const Dashboard = () => {
 
   useEffect(() => {
     getDashboardSummary()
-  }, [transactions, getDashboardSummary])
+    getCategoriesStatistics()
+  }, [transactions, getDashboardSummary, getCategoriesStatistics])
 
   return (
     <div className="grid grid-cols-3 gap-6">
-      {loading ? (
+      {loadingDashboard || loadingStatistics ? (
         <>
           <Skeleton className="h-35" />
           <Skeleton className="h-35" />
@@ -53,7 +62,7 @@ export const Dashboard = () => {
 
           <RecentTransactionsTable className="col-span-2" />
 
-          <CategoriesSummaryList />
+          <CategoriesStatisticsList />
         </>
       )}
     </div>

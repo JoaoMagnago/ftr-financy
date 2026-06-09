@@ -1,70 +1,22 @@
 import { CategoryLabel } from '@/components/CategoryLabel'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { CategoryColor, CategoryIcon } from '@/types'
+import { useDashboardStore } from '@/stores/dashboard'
+import { CategoryColor } from '@/types'
 import { resolveColor } from '@/utils/resolveColor'
 import { ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-export const CategoriesSummaryList = ({
+export const CategoriesStatisticsList = ({
   className,
 }: {
   className?: string
 }) => {
   const navigate = useNavigate()
 
-  const categories = [
-    {
-      id: '1',
-      name: 'Alimentação',
-      color: 'red',
-      amountItems: 12,
-      totalAmount: 54230,
-      icon: CategoryIcon.FOOD,
-      createdAt: '2025-01-15T08:30:00.000Z',
-      updatedAt: '2025-01-15T08:30:00.000Z',
-    },
-    {
-      id: '2',
-      name: 'Alimentação',
-      color: 'red',
-      amountItems: 12,
-      totalAmount: 54230,
-      icon: CategoryIcon.FOOD,
-      createdAt: '2025-01-15T08:30:00.000Z',
-      updatedAt: '2025-01-15T08:30:00.000Z',
-    },
-    {
-      id: '3',
-      name: 'Alimentação',
-      color: 'red',
-      amountItems: 12,
-      totalAmount: 54230,
-      icon: CategoryIcon.FOOD,
-      createdAt: '2025-01-15T08:30:00.000Z',
-      updatedAt: '2025-01-15T08:30:00.000Z',
-    },
-    {
-      id: '4',
-      name: 'Alimentação',
-      color: 'red',
-      amountItems: 12,
-      totalAmount: 54230,
-      icon: CategoryIcon.FOOD,
-      createdAt: '2025-01-15T08:30:00.000Z',
-      updatedAt: '2025-01-15T08:30:00.000Z',
-    },
-    {
-      id: '5',
-      name: 'Alimentação',
-      color: 'red',
-      amountItems: 12,
-      totalAmount: 54230,
-      icon: CategoryIcon.FOOD,
-      createdAt: '2025-01-15T08:30:00.000Z',
-      updatedAt: '2025-01-15T08:30:00.000Z',
-    },
-  ]
+  const categoriesStatistics = useDashboardStore(
+    (state) => state.categoriesStatistics,
+  )
 
   return (
     <Card className={`p-0 h-fit ${className}`}>
@@ -82,34 +34,40 @@ export const CategoriesSummaryList = ({
       </CardHeader>
 
       <CardContent className="flex flex-col gap-5 px-8 pb-8 pt-0">
-        {categories.map((category) => {
-          const amountFormatted = new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          }).format(Number(category.totalAmount) / 100)
+        {categoriesStatistics.map(
+          ({ category, totalAmount, transactionCount }) => {
+            const amountFormatted = new Intl.NumberFormat('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            }).format(Number(totalAmount) / 100)
 
-          const colors = resolveColor(CategoryColor.GREEN)
+            const colors = resolveColor(
+              category.color
+                ? (category.color as CategoryColor)
+                : CategoryColor.GREEN,
+            )
 
-          return (
-            <div
-              key={category.id}
-              className="grid grid-cols-[1fr_auto] items-center"
-            >
-              <div className="flex items-center justify-between">
-                <CategoryLabel name={category.name} colors={colors} />
-                <span className="text-sm text-muted-foreground">
-                  {category.amountItems} itens
-                </span>
+            return (
+              <div
+                key={category.id}
+                className="grid grid-cols-[1fr_auto] gap-6 items-center"
+              >
+                <div className="flex items-center justify-between">
+                  <CategoryLabel name={category.name} colors={colors} />
+                  <span className="text-sm text-muted-foreground">
+                    {transactionCount} {transactionCount > 1 ? 'itens' : 'item'}
+                  </span>
+                </div>
+
+                <div className="w-22 text-right">
+                  <span className="text-sm text-foreground font-semibold">
+                    {amountFormatted}
+                  </span>
+                </div>
               </div>
-
-              <div className="w-22 text-right">
-                <span className="text-sm text-foreground font-semibold">
-                  {amountFormatted}
-                </span>
-              </div>
-            </div>
-          )
-        })}
+            )
+          },
+        )}
       </CardContent>
     </Card>
   )

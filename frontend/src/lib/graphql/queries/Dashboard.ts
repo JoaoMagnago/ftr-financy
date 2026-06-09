@@ -1,4 +1,4 @@
-import type { DashboardSummary } from '@/types'
+import type { CategoryStatistics, DashboardSummary } from '@/types'
 import { gql, type TypedDocumentNode } from '@apollo/client'
 
 type DashboardSummaryQueryData = {
@@ -19,6 +19,7 @@ export const DASHBOARD_SUMMARY_QUERY: TypedDocumentNode<
         id
         description
         amount
+        type
         category {
           id
           name
@@ -32,11 +33,37 @@ export const DASHBOARD_SUMMARY_QUERY: TypedDocumentNode<
       balance
       mostUsedCategory {
         category {
+          id
           name
+          color
+          icon
         }
         transactionCount
         totalAmount
       }
+    }
+  }
+`
+
+type CategoriesStatisticsQueryData = {
+  categoriesStatistics: CategoryStatistics[]
+}
+
+type CategoriesStatisticsVariables = Record<string, never>
+
+export const CATEGORIES_STATISTICS_QUERY: TypedDocumentNode<
+  CategoriesStatisticsQueryData,
+  CategoriesStatisticsVariables
+> = gql`
+  query CategoriesStatistics {
+    categoriesStatistics {
+      category {
+        id
+        name
+        color
+      }
+      totalAmount
+      transactionCount
     }
   }
 `

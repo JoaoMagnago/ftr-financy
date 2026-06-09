@@ -1,4 +1,4 @@
-import { TransactionType } from '@/types'
+import { CategoryIcon, TransactionType } from '@/types'
 import { BriefcaseBusiness } from 'lucide-react'
 
 export const transactionsMock = [
@@ -66,5 +66,58 @@ export const transactionsMock = [
       color: 'red',
       icon: <BriefcaseBusiness className="w-4" />,
     },
+  },
+]
+
+export const categories = [
+  {
+    id: '1',
+    name: 'Alimentação',
+    color: 'red',
+    amountItems: 12,
+    totalAmount: 54230,
+    icon: CategoryIcon.FOOD,
+    createdAt: '2025-01-15T08:30:00.000Z',
+    updatedAt: '2025-01-15T08:30:00.000Z',
+  },
+  {
+    id: '2',
+    name: 'Alimentação',
+    color: 'red',
+    amountItems: 12,
+    totalAmount: 54230,
+    icon: CategoryIcon.FOOD,
+    createdAt: '2025-01-15T08:30:00.000Z',
+    updatedAt: '2025-01-15T08:30:00.000Z',
+  },
+  {
+    id: '3',
+    name: 'Alimentação',
+    color: 'red',
+    amountItems: 12,
+    totalAmount: 54230,
+    icon: CategoryIcon.FOOD,
+    createdAt: '2025-01-15T08:30:00.000Z',
+    updatedAt: '2025-01-15T08:30:00.000Z',
+  },
+  {
+    id: '4',
+    name: 'Alimentação',
+    color: 'red',
+    amountItems: 12,
+    totalAmount: 54230,
+    icon: CategoryIcon.FOOD,
+    createdAt: '2025-01-15T08:30:00.000Z',
+    updatedAt: '2025-01-15T08:30:00.000Z',
+  },
+  {
+    id: '5',
+    name: 'Alimentação',
+    color: 'red',
+    amountItems: 12,
+    totalAmount: 54230,
+    icon: CategoryIcon.FOOD,
+    createdAt: '2025-01-15T08:30:00.000Z',
+    updatedAt: '2025-01-15T08:30:00.000Z',
   },
 ]
