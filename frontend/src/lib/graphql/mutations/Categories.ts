@@ -56,3 +56,20 @@ export const UPDATE_CATEGORY: TypedDocumentNode<
     }
   }
 `
+
+type DeleteCategoryMutationData = {
+  deleteCategory: boolean
+}
+
+type DeleteCategoryMutationVariables = {
+  deleteCategoryId: string
+}
+
+export const DELETE_CATEGORY: TypedDocumentNode<
+  DeleteCategoryMutationData,
+  DeleteCategoryMutationVariables
+> = gql`
+  mutation DeleteCategory($deleteCategoryId: String!) {
+    deleteCategory(id: $deleteCategoryId)
+  }
+`

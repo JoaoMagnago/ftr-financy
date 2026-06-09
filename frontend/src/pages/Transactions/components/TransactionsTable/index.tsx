@@ -19,6 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { TransactionModal } from '@/components/Modals/TransactionModal'
 import { DeleteAndEditButtonGroup } from '@/components/DeleteAndEditButtonGroup'
 import { resolveColor } from '@/utils/resolveColor'
+import { useDashboardStore } from '@/stores/dashboard'
 
 export function TransactionsTable({ className }: { className?: string }) {
   const [editingTransaction, setEditingTransaction] =
@@ -47,6 +48,15 @@ export function TransactionsTable({ className }: { className?: string }) {
       deleteTransaction: state.deleteTransaction,
     })),
   )
+
+  const getDashboardSummary = useDashboardStore(
+    (state) => state.getDashboardSummary,
+  )
+
+  const handleDeleteTransaction = async (id: string) => {
+    await deleteTransaction(id)
+    await getDashboardSummary()
+  }
 
   useEffect(() => {
     listTransactions(filters)
@@ -176,7 +186,7 @@ export function TransactionsTable({ className }: { className?: string }) {
                         onEdit={() => {
                           setEditingTransaction(transaction)
                         }}
-                        onDelete={() => deleteTransaction(transaction.id)}
+                        onDelete={() => handleDeleteTransaction(transaction.id)}
                       />
                     </TableCell>
                   </TableRow>

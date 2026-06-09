@@ -8,6 +8,7 @@ import type {
 } from '@/types'
 import {
   CREATE_CATEGORY,
+  DELETE_CATEGORY,
   UPDATE_CATEGORY,
 } from '@/lib/graphql/mutations/Categories'
 
@@ -15,8 +16,10 @@ interface CategoriesState {
   categories: CategoryListItem[]
   loading: boolean
   loaded: boolean
+  deleting: boolean
   createCategory: (data: CreateCategoryInput) => Promise<void>
   updateCategory: (id: string, data: UpdateCategoryInput) => Promise<void>
+  deleteCategory: (id: string) => Promise<void>
   listCategories: () => Promise<void>
 }
 
@@ -24,6 +27,7 @@ export const useCategoriesStore = create<CategoriesState>((set, get) => ({
   categories: [],
   loading: false,
   loaded: false,
+  deleting: false,
   createCategory: async (categoryData) => {
     try {
       const { data } = await apolloClient.mutate({
@@ -72,6 +76,28 @@ export const useCategoriesStore = create<CategoriesState>((set, get) => ({
     } catch (error) {
       console.error('Erro ao atualizar categoria')
       throw error
+    }
+  },
+  deleteCategory: async (id) => {
+    set({ deleting: true })
+
+    try {
+      await apolloClient.mutate({
+        mutation: DELETE_CATEGORY,
+        variables: {
+          deleteCategoryId: id,
+        },
+      })
+
+      set((state) => ({
+        categories: state.categories.filter((category) => category.id !== id),
+      }))
+    } catch (error) {
+      console.log('Erro ao excluir categoria')
+
+      throw error
+    } finally {
+      set({ deleting: false })
     }
   },
   listCategories: async () => {

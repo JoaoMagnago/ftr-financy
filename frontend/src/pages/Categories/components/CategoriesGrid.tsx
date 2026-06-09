@@ -4,6 +4,7 @@ import { CategoryModal } from '@/components/Modals/CategoryModal'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCategoriesStore } from '@/stores/categories'
+import { useDashboardStore } from '@/stores/dashboard'
 import {
   CategoryColor,
   CategoryIcon,
@@ -16,15 +17,26 @@ import { createElement, useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 export const CategoriesGrid = () => {
-  const { categories, loading, listCategories } = useCategoriesStore(
-    useShallow((state) => ({
-      categories: state.categories,
-      loading: state.loading,
-      listCategories: state.listCategories,
-    })),
+  const { categories, loading, deleteCategory, listCategories } =
+    useCategoriesStore(
+      useShallow((state) => ({
+        categories: state.categories,
+        loading: state.loading,
+        deleteCategory: state.deleteCategory,
+        listCategories: state.listCategories,
+      })),
+    )
+
+  const getDashboardSummary = useDashboardStore(
+    (state) => state.getDashboardSummary,
   )
 
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+
+  const handleDeleteCategory = async (id: string) => {
+    await deleteCategory(id)
+    await getDashboardSummary()
+  }
 
   useEffect(() => {
     if (categories.length === 0) {
@@ -43,6 +55,7 @@ export const CategoriesGrid = () => {
               key={category.id}
               category={category}
               setEditingCategory={() => setEditingCategory(category)}
+              handleDeleteCategory={() => handleDeleteCategory(category.id)}
             />
           ))}
 
@@ -58,9 +71,14 @@ export const CategoriesGrid = () => {
 type CategoryCardProps = {
   category: Partial<CategoryListItem>
   setEditingCategory: () => void
+  handleDeleteCategory: () => void
 }
 
-const CategoryCard = ({ category, setEditingCategory }: CategoryCardProps) => {
+const CategoryCard = ({
+  category,
+  setEditingCategory,
+  handleDeleteCategory,
+}: CategoryCardProps) => {
   const { name, description, icon, color, transactionCount } = category
 
   const colors = resolveColor(
@@ -83,7 +101,7 @@ const CategoryCard = ({ category, setEditingCategory }: CategoryCardProps) => {
 
           <DeleteAndEditButtonGroup
             onEdit={setEditingCategory}
-            onDelete={() => {}}
+            onDelete={handleDeleteCategory}
           />
         </div>
 
