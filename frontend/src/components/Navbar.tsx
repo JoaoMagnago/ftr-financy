@@ -4,11 +4,18 @@ import { Button } from './ui/button'
 import { Avatar } from './Avatar'
 
 import logo from '@/assets/logo.svg'
+import { useShallow } from 'zustand/react/shallow'
 
 export const Navbar = () => {
-  const { user, isAuthenticated } = useAuthStore()
   const location = useLocation()
   const navigate = useNavigate()
+
+  const { user, isAuthenticated } = useAuthStore(
+    useShallow((state) => ({
+      user: state.user,
+      isAuthenticated: state.isAuthenticated,
+    })),
+  )
 
   const isDashboardPage = location.pathname === '/'
   const isTransactionsPage = location.pathname === '/transactions'

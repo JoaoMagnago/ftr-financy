@@ -7,9 +7,11 @@ import { Dashboard } from './pages/Dashboard'
 import { Profile } from './pages/Profile'
 import { Categories } from './pages/Categories'
 import { Transactions } from './pages/Transactions'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { GuestRoute } from './components/GuestRoute'
 
 function App() {
-  const { isAuthenticated } = useAuthStore()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   return (
     <Layout>
@@ -18,10 +20,18 @@ function App() {
           path={'/'}
           element={isAuthenticated ? <Dashboard /> : <Login />}
         />
-        <Route path={'/signup'} element={<Signup />} />
-        <Route path={'/transactions'} element={<Transactions />} />
-        <Route path={'/categories'} element={<Categories />} />
-        <Route path={'/profile'} element={<Profile />} />
+
+        <Route element={<GuestRoute />}>
+          <Route path="/signup" element={<Signup />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/transactions" element={<Transactions />} />
+
+          <Route path="/categories" element={<Categories />} />
+
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Routes>
     </Layout>
   )

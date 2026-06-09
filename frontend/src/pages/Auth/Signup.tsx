@@ -34,9 +34,9 @@ const registerFormSchema = z.object({
 type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export const Signup = () => {
-  const [showPassword, setShowPassword] = useState(false)
-
   const signup = useAuthStore((state) => state.signup)
+
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit } = useForm<RegisterFormData>({
