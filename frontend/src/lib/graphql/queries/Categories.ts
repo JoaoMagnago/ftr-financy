@@ -1,8 +1,8 @@
 import { gql, type TypedDocumentNode } from '@apollo/client'
-import type { Category } from '@/types'
+import type { CategoryListItem } from '@/types'
 
 type ListCategoriesQueryData = {
-  listCategories: Category[]
+  listCategories: CategoryListItem[]
 }
 
 type ListCategoriesVariables = Record<string, never>
@@ -18,6 +18,7 @@ export const LIST_CATEGORIES: TypedDocumentNode<
       description
       icon
       color
+      transactionCount
       createdAt
       updatedAt
     }

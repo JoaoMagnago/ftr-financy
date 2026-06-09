@@ -36,6 +36,10 @@ export interface Category {
   updatedAt: string
 }
 
+export interface CategoryListItem extends Category {
+  transactionCount: number
+}
+
 export interface CreateCategoryInput {
   name: string
   description?: string

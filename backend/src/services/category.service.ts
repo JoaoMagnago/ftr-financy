@@ -63,11 +63,23 @@ export class CategoryService {
   }
 
   async listCategories(userId: string) {
-    return prismaClient.category.findMany({
+    const categories = await prismaClient.category.findMany({
       where: {
         userId,
       },
+      include: {
+        _count: {
+          select: {
+            transactions: true,
+          },
+        },
+      },
     })
+
+    return categories.map((category) => ({
+      ...category,
+      transactionCount: category._count.transactions,
+    }))
   }
 
   async findCategory(id: string) {

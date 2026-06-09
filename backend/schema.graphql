@@ -3,6 +3,17 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type CategoryListItemModel {
+  color: String!
+  createdAt: DateTimeISO!
+  description: String
+  icon: String!
+  id: ID!
+  name: String!
+  transactionCount: Int!
+  updatedAt: DateTimeISO!
+}
+
 type CategoryModel {
   color: String!
   createdAt: DateTimeISO!
@@ -100,7 +111,7 @@ type Query {
   categoriesStatistics: [CategoryStatisticsModel!]!
   dashboardSummary: DashboardSummaryModel!
   getUser(id: String!): UserModel!
-  listCategories: [CategoryModel!]!
+  listCategories: [CategoryListItemModel!]!
   listTransactions(data: ListTransactionsInput!): PaginatedTransactionsModel!
 }
 

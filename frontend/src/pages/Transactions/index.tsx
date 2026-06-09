@@ -6,15 +6,23 @@ import { useEffect, useState } from 'react'
 import { useCategoriesStore } from '@/stores/categories'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { useShallow } from 'zustand/react/shallow'
 
 export const Transactions = () => {
-  const listCategories = useCategoriesStore((state) => state.listCategories)
+  const { categories, listCategories } = useCategoriesStore(
+    useShallow((state) => ({
+      categories: state.categories,
+      listCategories: state.listCategories,
+    })),
+  )
 
   const [isOpen, onOpenChange] = useState(false)
 
   useEffect(() => {
-    listCategories()
-  }, [listCategories])
+    if (!categories) {
+      listCategories()
+    }
+  }, [categories, listCategories])
 
   return (
     <div className="flex flex-col items-center gap-8">

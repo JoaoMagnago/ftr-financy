@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { apolloClient } from '@/lib/graphql/apollo'
 import { LIST_CATEGORIES } from '@/lib/graphql/queries/Categories'
 import type {
-  Category,
+  CategoryListItem,
   CreateCategoryInput,
   UpdateCategoryInput,
 } from '@/types'
@@ -12,7 +12,7 @@ import {
 } from '@/lib/graphql/mutations/Categories'
 
 interface CategoriesState {
-  categories: Category[]
+  categories: CategoryListItem[]
   loading: boolean
   loaded: boolean
   createCategory: (data: CreateCategoryInput) => Promise<void>
@@ -38,7 +38,7 @@ export const useCategoriesStore = create<CategoriesState>((set, get) => ({
       if (!category) return
 
       set((state) => ({
-        categories: [...state.categories, category],
+        categories: [...state.categories, { ...category, transactionCount: 0 }],
       }))
     } catch (error) {
       console.error('Erro ao criar categoria')

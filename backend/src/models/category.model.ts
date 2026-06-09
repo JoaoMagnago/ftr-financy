@@ -1,8 +1,8 @@
 import { CategoryIcon } from '@prisma/client'
-import { Field, GraphQLISODateTime, ID, ObjectType } from 'type-graphql'
+import { Field, GraphQLISODateTime, ID, Int, ObjectType } from 'type-graphql'
 
 @ObjectType()
-export class CategoryModel {
+class CategoryBaseModel {
   @Field(() => ID)
   id!: string
 
@@ -23,4 +23,13 @@ export class CategoryModel {
 
   @Field(() => GraphQLISODateTime)
   updatedAt!: Date
+}
+
+@ObjectType()
+export class CategoryModel extends CategoryBaseModel {}
+
+@ObjectType()
+export class CategoryListItemModel extends CategoryBaseModel {
+  @Field(() => Int)
+  transactionCount!: number
 }
