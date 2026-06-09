@@ -18,6 +18,7 @@ import { resolveColor } from '@/utils/resolveColor'
 import { useShallow } from 'zustand/react/shallow'
 import { useCategoriesStore } from '@/stores/categories'
 import { useDashboardStore } from '@/stores/dashboard'
+import { useEffect } from 'react'
 
 const categorySchema = z.object({
   name: z.string().min(1, REQUIRED_FIELD_MESSAGE),
@@ -39,9 +40,10 @@ export const CategoryModal = ({
   category,
   onOpenChange,
 }: CategoryModalPart) => {
-  const { createCategory } = useCategoriesStore(
+  const { createCategory, updateCategory } = useCategoriesStore(
     useShallow((state) => ({
       createCategory: state.createCategory,
+      updateCategory: state.updateCategory,
     })),
   )
 
@@ -59,7 +61,28 @@ export const CategoryModal = ({
     handleSubmit,
   } = useForm<CategoryFormValue>({
     resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: category?.name ?? '',
+      description: category?.description,
+      color: category?.color
+        ? (category.color as CategoryColor)
+        : CategoryColor.GREEN,
+      icon: category?.icon ? category.icon : CategoryIcon.BAGGAGE,
+    },
   })
+
+  useEffect(() => {
+    if (!category) return
+
+    reset({
+      name: category?.name ?? '',
+      description: category?.description,
+      color: category?.color
+        ? (category.color as CategoryColor)
+        : CategoryColor.GREEN,
+      icon: category?.icon ? category.icon : CategoryIcon.BAGGAGE,
+    })
+  }, [category, reset])
 
   const handleClose = () => {
     reset()
@@ -69,7 +92,7 @@ export const CategoryModal = ({
   const onSubmit = async (data: CategoryFormValue) => {
     try {
       if (category) {
-        // await updateCategory(category.id, data)
+        await updateCategory(category.id, data)
       } else {
         await createCategory(data)
 

@@ -1,15 +1,23 @@
 import { create } from 'zustand'
 import { apolloClient } from '@/lib/graphql/apollo'
 import { LIST_CATEGORIES } from '@/lib/graphql/queries/Categories'
-import type { Category, CreateCategoryInput } from '@/types'
-import { CREATE_CATEGORY } from '@/lib/graphql/mutations/Categories'
+import type {
+  Category,
+  CreateCategoryInput,
+  UpdateCategoryInput,
+} from '@/types'
+import {
+  CREATE_CATEGORY,
+  UPDATE_CATEGORY,
+} from '@/lib/graphql/mutations/Categories'
 
 interface CategoriesState {
   categories: Category[]
   loading: boolean
   loaded: boolean
-  listCategories: () => Promise<void>
   createCategory: (data: CreateCategoryInput) => Promise<void>
+  updateCategory: (id: string, data: UpdateCategoryInput) => Promise<void>
+  listCategories: () => Promise<void>
 }
 
 export const useCategoriesStore = create<CategoriesState>((set, get) => ({
@@ -34,6 +42,35 @@ export const useCategoriesStore = create<CategoriesState>((set, get) => ({
       }))
     } catch (error) {
       console.error('Erro ao criar categoria')
+      throw error
+    }
+  },
+  updateCategory: async (id, categoryData) => {
+    try {
+      const { data } = await apolloClient.mutate({
+        mutation: UPDATE_CATEGORY,
+        variables: {
+          updateCategoryId: id,
+          updateCategoryData: categoryData,
+        },
+      })
+
+      const category = data?.updateCategory
+
+      if (!category) return
+
+      set((state) => ({
+        categories: state.categories.map((item) =>
+          item.id === category.id
+            ? {
+                ...item,
+                ...category,
+              }
+            : item,
+        ),
+      }))
+    } catch (error) {
+      console.error('Erro ao atualizar categoria')
       throw error
     }
   },

@@ -42,3 +42,5 @@ export interface CreateCategoryInput {
   icon: CategoryIcon
   color: string
 }
+
+export type UpdateCategoryInput = Partial<CreateCategoryInput>
