@@ -60,7 +60,6 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
                 : 'Sem data'
 
               const isExpense = transaction.type === TransactionType.EXPENSE
-              console.log(transaction.type, TransactionType.EXPENSE, isExpense)
 
               const amountFormatted = new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
