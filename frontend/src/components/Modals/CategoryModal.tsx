@@ -4,20 +4,20 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '../ui/button'
-import { Plus } from 'lucide-react'
 import z from 'zod'
 import { REQUIRED_FIELD_MESSAGE } from '@/constants/form'
-import { CategoryColor, CategoryIcon } from '@/types'
+import { CategoryColor, CategoryIcon, type Category } from '@/types'
 import { Controller, useForm, type FieldErrors } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { resolveIcon } from '@/utils/resolveIcon'
 import { resolveColor } from '@/utils/resolveColor'
-import { useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import { useCategoriesStore } from '@/stores/categories'
+import { useDashboardStore } from '@/stores/dashboard'
 
 const categorySchema = z.object({
   name: z.string().min(1, REQUIRED_FIELD_MESSAGE),
@@ -28,8 +28,28 @@ const categorySchema = z.object({
 
 type CategoryFormValue = z.infer<typeof categorySchema>
 
-export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
-  const [isOpen, setIsOpen] = useState(false)
+interface CategoryModalPart {
+  isOpen: boolean
+  category?: Category
+  onOpenChange: (open: boolean) => void
+}
+
+export const CategoryModal = ({
+  isOpen,
+  category,
+  onOpenChange,
+}: CategoryModalPart) => {
+  const { createCategory } = useCategoriesStore(
+    useShallow((state) => ({
+      createCategory: state.createCategory,
+    })),
+  )
+
+  const getDashboardSummary = useDashboardStore(
+    (state) => state.getDashboardSummary,
+  )
+
+  const isEditing = !!category
 
   const {
     control,
@@ -43,12 +63,23 @@ export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
 
   const handleClose = () => {
     reset()
-    setIsOpen(false)
+    onOpenChange(false)
   }
 
-  const onSubmit = (data: CategoryFormValue) => {
-    console.log(data)
-    handleClose()
+  const onSubmit = async (data: CategoryFormValue) => {
+    try {
+      if (category) {
+        // await updateCategory(category.id, data)
+      } else {
+        await createCategory(data)
+
+        await getDashboardSummary()
+      }
+
+      handleClose()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const onError = (errors: FieldErrors<CategoryFormValue>) => {
@@ -62,13 +93,7 @@ export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus />
-          <span>Nova categoria</span>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent handleCloseButton={handleClose}>
         <DialogHeader>
           <DialogTitle>
@@ -162,7 +187,7 @@ export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
             control={control}
             render={({ field: { value, onChange } }) => (
               <div className="flex flex-col gap-2">
-                <Label htmlFor="colors">Cor</Label>
+                <Label>Cor</Label>
                 <div className="grid grid-cols-7 gap-2">
                   {Object.values(CategoryColor).map((color) => {
                     const colors = resolveColor(color)
@@ -174,10 +199,7 @@ export const CategoryModal = ({ isEditing }: { isEditing: boolean }) => {
                         onClick={() => onChange(color)}
                       >
                         <div
-                          className="h-5 w-full rounded-sm"
-                          style={{
-                            backgroundColor: colors.lightBg,
-                          }}
+                          className={`h-5 w-full rounded-sm ${colors.baseBg}`}
                         />
                       </div>
                     )

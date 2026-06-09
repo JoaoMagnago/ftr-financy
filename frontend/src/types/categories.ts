@@ -35,3 +35,10 @@ export interface Category {
   createdAt: string
   updatedAt: string
 }
+
+export interface CreateCategoryInput {
+  name: string
+  description?: string
+  icon: CategoryIcon
+  color: string
+}

@@ -1,4 +1,4 @@
-import type { ResolveColorsOutput } from '@/utils/resolveColor'
+import { type ResolveColorsOutput } from '@/utils/resolveColor'
 
 export const CategoryLabel = ({
   name,
