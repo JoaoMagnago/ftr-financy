@@ -30,13 +30,10 @@ function TooltipTrigger({
 
 function TooltipContent({
   className,
-  arrowClassName,
   sideOffset = 0,
   children,
   ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Content> & {
-  arrowClassName?: string
-}) {
+}: React.ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
