@@ -9,6 +9,7 @@ import { Categories } from './pages/Categories'
 import { Transactions } from './pages/Transactions'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { GuestRoute } from './components/GuestRoute'
+import { NotFound } from './pages/NotFound'
 
 function App() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -32,6 +33,8 @@ function App() {
 
           <Route path="/profile" element={<Profile />} />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
   )
