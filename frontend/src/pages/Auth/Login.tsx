@@ -38,8 +38,12 @@ export const Login = () => {
   const login = useAuthStore((state) => state.login)
 
   const [showPassword, setShowPassword] = useState(false)
-  const [loginError, setLoginError] = useState('')
+  const [rememberMe, setRememberMe] = useState(
+    localStorage.getItem('remember-me') === 'true',
+  )
+
   const [loading, setLoading] = useState(false)
+  const [loginError, setLoginError] = useState('')
 
   const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
@@ -55,6 +59,8 @@ export const Login = () => {
 
     try {
       await login(data)
+
+      localStorage.setItem('remember-me', rememberMe ? 'true' : 'false')
     } catch (error) {
       console.log(error)
       setLoginError('* E-mail ou senha inválidos.')
@@ -169,6 +175,10 @@ export const Login = () => {
                   <Checkbox
                     id="remember-me-checkbox"
                     name="remember-me-checkbox"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) =>
+                      setRememberMe(checked === true)
+                    }
                   />
                   <FieldLabel
                     className="font-normal"
@@ -177,10 +187,6 @@ export const Login = () => {
                     Lembrar-me
                   </FieldLabel>
                 </Field>
-
-                <span className="text-sm font-medium text-primary whitespace-nowrap cursor-pointer hover:underline">
-                  Recuperar senha
-                </span>
               </div>
             </div>
 
