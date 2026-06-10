@@ -24,10 +24,11 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import logo from '@/assets/logo.svg'
+import { REQUIRED_FIELD_MESSAGE } from '@/constants/form'
 
 const registerFormSchema = z.object({
-  name: z.string(),
-  email: z.email(),
+  name: z.string().min(3, REQUIRED_FIELD_MESSAGE),
+  email: z.email('E-mail inválido'),
   password: z.string().min(8, 'A senha deve ter no mínimo 8 caracteres'),
 })
 
@@ -37,19 +38,27 @@ export const Signup = () => {
   const signup = useAuthStore((state) => state.signup)
 
   const [showPassword, setShowPassword] = useState(false)
+  const [signUpError, setSignUpError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+    },
   })
 
   const onSubmit = async (data: RegisterFormData) => {
     setLoading(true)
+    setSignUpError('')
 
     try {
       await signup(data)
     } catch (error) {
       console.log(error)
+      setSignUpError('* E-mail já cadastrado.')
     } finally {
       setLoading(false)
     }
@@ -77,10 +86,20 @@ export const Signup = () => {
               <Controller
                 name="name"
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="name">Nome completo</Label>
+                    <Label htmlFor="name" aria-invalid={!!error}>
+                      Nome completo
+                    </Label>
+
                     <InputGroup data-state={value ? 'filled' : 'empty'}>
+                      <InputGroupAddon>
+                        <UserRound className={error ? 'text-(--danger)' : ''} />
+                      </InputGroupAddon>
+
                       <InputGroupInput
                         id="name"
                         type="text"
@@ -89,10 +108,13 @@ export const Signup = () => {
                         required
                         onChange={onChange}
                       />
-                      <InputGroupAddon>
-                        <UserRound />
-                      </InputGroupAddon>
                     </InputGroup>
+
+                    {error && (
+                      <span className="text-xs text-(--gray-500)">
+                        {error.message}
+                      </span>
+                    )}
                   </div>
                 )}
               />
@@ -100,22 +122,36 @@ export const Signup = () => {
               <Controller
                 name="email"
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="email">E-mail</Label>
+                    <Label htmlFor="email" aria-invalid={!!error}>
+                      E-mail
+                    </Label>
                     <InputGroup data-state={value ? 'filled' : 'empty'}>
+                      <InputGroupAddon>
+                        <Mail className={error ? 'text-(--danger)' : ''} />
+                      </InputGroupAddon>
                       <InputGroupInput
                         id="email"
                         type="email"
                         placeholder="mail@exemplo.com"
                         value={value}
                         required
-                        onChange={onChange}
+                        onChange={(e) => {
+                          setSignUpError('')
+                          onChange(e)
+                        }}
                       />
-                      <InputGroupAddon>
-                        <Mail />
-                      </InputGroupAddon>
                     </InputGroup>
+
+                    {error && (
+                      <span className="text-xs text-(--gray-500)">
+                        {error.message}
+                      </span>
+                    )}
                   </div>
                 )}
               />
@@ -123,10 +159,19 @@ export const Signup = () => {
               <Controller
                 name="password"
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="password">Senha</Label>
+                    <Label htmlFor="password" aria-invalid={!!error}>
+                      Senha
+                    </Label>
+
                     <InputGroup data-state={value ? 'filled' : 'empty'}>
+                      <InputGroupAddon>
+                        <Lock className={error ? 'text-(--danger)' : ''} />
+                      </InputGroupAddon>
                       <InputGroupInput
                         id="password"
                         type={showPassword ? 'text' : 'password'}
@@ -135,9 +180,6 @@ export const Signup = () => {
                         required
                         onChange={onChange}
                       />
-                      <InputGroupAddon>
-                        <Lock />
-                      </InputGroupAddon>
                       <InputGroupAddon align="inline-end">
                         <InputGroupButton
                           size="icon-xs"
@@ -147,6 +189,7 @@ export const Signup = () => {
                         </InputGroupButton>
                       </InputGroupAddon>
                     </InputGroup>
+
                     <span className="text-xs text-(--gray-500)">
                       A senha deve ter no mínimo 8 caracteres
                     </span>
@@ -155,14 +198,20 @@ export const Signup = () => {
               />
             </div>
 
-            <Button
-              type="submit"
-              size="xl"
-              className="w-full"
-              disabled={loading}
-            >
-              Cadastrar
-            </Button>
+            <div className="flex flex-col gap-2">
+              {signUpError && (
+                <span className="text-xs text-(--danger)">{signUpError}</span>
+              )}
+
+              <Button
+                type="submit"
+                size="xl"
+                className="w-full"
+                disabled={loading}
+              >
+                Cadastrar
+              </Button>
+            </div>
           </form>
 
           <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-3 items-center w-full">

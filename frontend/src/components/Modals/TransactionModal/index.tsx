@@ -2,12 +2,7 @@ import { useEffect } from 'react'
 
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Controller,
-  useForm,
-  useWatch,
-  type FieldErrors,
-} from 'react-hook-form'
+import { Controller, useForm, type FieldErrors } from 'react-hook-form'
 
 import {
   Dialog,
@@ -44,8 +39,8 @@ const TransactionSchema = z.object({
   type: z.enum(TransactionType),
   description: z.string().trim().min(1, REQUIRED_FIELD_MESSAGE),
   date: z.string(),
-  amount: z.number(),
-  categoryId: z.string(),
+  amount: z.number().min(1, REQUIRED_FIELD_MESSAGE),
+  categoryId: z.string().min(1, REQUIRED_FIELD_MESSAGE),
 })
 
 type TransactionFormValues = z.infer<typeof TransactionSchema>
@@ -77,7 +72,6 @@ export const TransactionModal = ({
     formState: { isSubmitting },
     reset,
     setFocus,
-    setValue,
     handleSubmit,
   } = useForm<TransactionFormValues>({
     resolver: zodResolver(TransactionSchema),
@@ -104,11 +98,6 @@ export const TransactionModal = ({
     })
   }, [transaction, reset])
 
-  const amount = useWatch({
-    control: control,
-    name: 'amount',
-  })
-
   const formatCurrencyInput = (value: number) => {
     return (value / 100).toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
@@ -125,11 +114,6 @@ export const TransactionModal = ({
     onChange(Number(digits || 0))
   }
 
-  const handleClose = () => {
-    reset()
-    onOpenChange(false)
-  }
-
   const onSubmit = async (data: TransactionFormValues) => {
     try {
       if (transaction) {
@@ -138,7 +122,7 @@ export const TransactionModal = ({
         await createTransaction(data)
       }
 
-      handleClose()
+      onOpenChange(false)
     } catch (error) {
       console.error(error)
     }
@@ -154,9 +138,20 @@ export const TransactionModal = ({
     console.error(errors)
   }
 
+  useEffect(() => {
+    if (!isOpen) {
+      reset()
+    }
+  }, [isOpen, reset])
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent handleCloseButton={handleClose}>
+      <DialogContent
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
+        }}
+        handleCloseButton={() => onOpenChange(false)}
+      >
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Editar transação' : 'Nova transação'}
@@ -182,65 +177,101 @@ export const TransactionModal = ({
             <Controller
               name="description"
               control={control}
-              render={({ field: { value, onChange } }) => (
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="description">Descrição</Label>
+                  <Label htmlFor="description" aria-invalid={!!error}>
+                    Descrição
+                  </Label>
+
                   <Input
                     id="description"
                     type="text"
                     value={value}
-                    placeholder="Descrição da categoria"
+                    placeholder="Descrição da transação"
                     autoComplete="off"
                     required
                     onChange={onChange}
                   />
+                  {error && (
+                    <span className="text-xs text-(--gray-500)">
+                      {error.message}
+                    </span>
+                  )}
                 </div>
               )}
             />
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 -mb-3">
               <Controller
                 name="date"
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="date">Data</Label>
+
                     <TransactionDatePicker
                       date={value ? new Date(value) : undefined}
                       setDate={(date) => onChange(date.toISOString())}
                     />
+                    <div className="h-3" />
                   </div>
                 )}
               />
 
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="amount">Valor</Label>
-                <InputGroup data-state={amount ? 'filled' : 'empty'}>
-                  <InputGroupAddon>
-                    <span>R$</span>
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    id="amount"
-                    type="text"
-                    placeholder="0,00"
-                    value={formatCurrencyInput(amount ?? 0)}
-                    required
-                    onChange={(e) =>
-                      handleAmountChange(e, (value) =>
-                        setValue('amount', value),
-                      )
-                    }
-                  />
-                </InputGroup>
-              </div>
+              <Controller
+                name="amount"
+                control={control}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="amount" aria-invalid={!!error}>
+                      Valor
+                    </Label>
+
+                    <InputGroup data-state={value ? 'filled' : 'empty'}>
+                      <InputGroupAddon>
+                        <span>R$</span>
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        id="amount"
+                        type="text"
+                        placeholder="0,00"
+                        value={formatCurrencyInput(value ?? 0)}
+                        required
+                        onChange={(e) =>
+                          handleAmountChange(e, (value) => onChange(value))
+                        }
+                      />
+                    </InputGroup>
+
+                    {error ? (
+                      <span className="text-xs text-(--gray-500)">
+                        {error.message}
+                      </span>
+                    ) : (
+                      <div className="h-3" />
+                    )}
+                  </div>
+                )}
+              />
             </div>
 
             <Controller
               name="categoryId"
               control={control}
-              render={({ field: { value, onChange } }) => (
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="categoryId">Categoria</Label>
+                  <Label htmlFor="categoryId" aria-invalid={!!error}>
+                    Categoria
+                  </Label>
 
                   <Select value={value} onValueChange={onChange}>
                     <SelectTrigger
@@ -268,6 +299,12 @@ export const TransactionModal = ({
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+
+                  {error && (
+                    <span className="text-xs text-(--gray-500)">
+                      {error.message}
+                    </span>
+                  )}
                 </div>
               )}
             />

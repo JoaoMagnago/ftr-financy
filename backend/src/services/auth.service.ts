@@ -31,6 +31,7 @@ export class AuthService {
         email: data.email,
       },
     })
+
     if (existingUser) throw new Error('E-mail já cadastrado!')
 
     const hash = await hashPassword(data.password)

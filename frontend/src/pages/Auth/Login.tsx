@@ -28,30 +28,36 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import logo from '@/assets/logo.svg'
 
 const loginFormSchema = z.object({
-  email: z.email(),
+  email: z.email('E-mail inválido'),
   password: z.string().min(8, 'A senha deve ter no mínimo 8 caracteres'),
 })
 
 type LoginFormData = z.infer<typeof loginFormSchema>
 
 export const Login = () => {
-  const [showPassword, setShowPassword] = useState(false)
-
   const login = useAuthStore((state) => state.login)
 
+  const [showPassword, setShowPassword] = useState(false)
+  const [loginError, setLoginError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   })
 
   const onSubmit = async (data: LoginFormData) => {
+    setLoginError('')
     setLoading(true)
 
     try {
       await login(data)
     } catch (error) {
       console.log(error)
+      setLoginError('* E-mail ou senha inválidos.')
     } finally {
       setLoading(false)
     }
@@ -77,9 +83,15 @@ export const Login = () => {
               <Controller
                 name="email"
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="email">E-mail</Label>
+                    <Label htmlFor="email" aria-invalid={!!error}>
+                      E-mail
+                    </Label>
+
                     <InputGroup data-state={value ? 'filled' : 'empty'}>
                       <InputGroupInput
                         id="email"
@@ -87,12 +99,21 @@ export const Login = () => {
                         placeholder="mail@exemplo.com"
                         value={value}
                         required
-                        onChange={onChange}
+                        onChange={(e) => {
+                          setLoginError('')
+                          onChange(e)
+                        }}
                       />
                       <InputGroupAddon>
-                        <Mail />
+                        <Mail className={error ? 'text-(--danger)' : ''} />
                       </InputGroupAddon>
                     </InputGroup>
+
+                    {error && (
+                      <span className="text-xs text-(--gray-500)">
+                        {error.message}
+                      </span>
+                    )}
                   </div>
                 )}
               />
@@ -100,9 +121,15 @@ export const Login = () => {
               <Controller
                 name="password"
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="password">Senha</Label>
+                    <Label htmlFor="password" aria-invalid={!!error}>
+                      Senha
+                    </Label>
+
                     <InputGroup data-state={value ? 'filled' : 'empty'}>
                       <InputGroupInput
                         id="password"
@@ -110,10 +137,13 @@ export const Login = () => {
                         placeholder="Digite sua senha"
                         value={value}
                         required
-                        onChange={onChange}
+                        onChange={(e) => {
+                          setLoginError('')
+                          onChange(e)
+                        }}
                       />
                       <InputGroupAddon>
-                        <Lock />
+                        <Lock className={error ? 'text-(--danger)' : ''} />
                       </InputGroupAddon>
                       <InputGroupAddon align="inline-end">
                         <InputGroupButton
@@ -124,6 +154,12 @@ export const Login = () => {
                         </InputGroupButton>
                       </InputGroupAddon>
                     </InputGroup>
+
+                    {error && (
+                      <span className="text-xs text-(--gray-500)">
+                        {error.message}
+                      </span>
+                    )}
                   </div>
                 )}
               />
@@ -148,14 +184,19 @@ export const Login = () => {
               </div>
             </div>
 
-            <Button
-              type="submit"
-              size="xl"
-              className="w-full"
-              disabled={loading}
-            >
-              Entrar
-            </Button>
+            <div className="flex flex-col gap-2">
+              {loginError && (
+                <span className="text-xs text-(--danger)">{loginError}</span>
+              )}
+              <Button
+                type="submit"
+                size="xl"
+                className="w-full"
+                disabled={loading}
+              >
+                Entrar
+              </Button>
+            </div>
           </form>
 
           <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-3 items-center w-full">

@@ -84,11 +84,6 @@ export const CategoryModal = ({
     })
   }, [category, reset])
 
-  const handleClose = () => {
-    reset()
-    onOpenChange(false)
-  }
-
   const onSubmit = async (data: CategoryFormValue) => {
     try {
       if (category) {
@@ -99,7 +94,7 @@ export const CategoryModal = ({
         await getDashboardSummary()
       }
 
-      handleClose()
+      onOpenChange(false)
     } catch (error) {
       console.error(error)
     }
@@ -115,13 +110,19 @@ export const CategoryModal = ({
     console.error(errors)
   }
 
+  useEffect(() => {
+    if (!isOpen) {
+      reset()
+    }
+  }, [isOpen, reset])
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
         onOpenAutoFocus={(event) => {
           event.preventDefault()
         }}
-        handleCloseButton={handleClose}
+        handleCloseButton={() => onOpenChange(false)}
       >
         <DialogHeader>
           <DialogTitle>
@@ -141,9 +142,12 @@ export const CategoryModal = ({
           <Controller
             name="name"
             control={control}
-            render={({ field: { value, onChange } }) => (
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
               <div className="flex flex-col gap-2">
-                <Label htmlFor="name">Título</Label>
+                <Label htmlFor="name" aria-invalid={!!error}>
+                  Título
+                </Label>
+
                 <Input
                   id="name"
                   type="text"
@@ -153,6 +157,12 @@ export const CategoryModal = ({
                   required
                   onChange={onChange}
                 />
+
+                {error && (
+                  <span className="text-xs text-(--gray-500)">
+                    {error.message}
+                  </span>
+                )}
               </div>
             )}
           />
