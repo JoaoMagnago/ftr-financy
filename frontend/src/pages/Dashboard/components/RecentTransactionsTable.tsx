@@ -67,14 +67,11 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
                 )
 
                 const dateFormatted = transaction.createdAt
-                  ? new Date(transaction.createdAt).toLocaleDateString(
-                      'pt-BR',
-                      {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: '2-digit',
-                      },
-                    )
+                  ? new Date(transaction.date).toLocaleDateString('pt-BR', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: '2-digit',
+                    })
                   : 'Sem data'
 
                 const isExpense = transaction.type === TransactionType.EXPENSE

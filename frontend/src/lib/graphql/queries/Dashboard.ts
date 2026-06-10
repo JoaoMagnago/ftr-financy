@@ -19,6 +19,7 @@ export const DASHBOARD_SUMMARY_QUERY: TypedDocumentNode<
         id
         description
         amount
+        date
         type
         category {
           id
