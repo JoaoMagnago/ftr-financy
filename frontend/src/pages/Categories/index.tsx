@@ -29,9 +29,18 @@ export const Categories = () => {
         }
       />
 
-      {categories.length > 0 && <CategoriesNumberCards />}
+      <CategoriesNumberCards />
 
-      <CategoriesGrid />
+      {categories.length === 0 ? (
+        <div className="flex flex-col gap-3 items-center justify-center h-100">
+          <h2 className="font-medium">Nenhuma categoria cadastrada</h2>
+          <p className="text-sm text-(--gray-500)">
+            Crie categorias para visualizá-las nessa página
+          </p>
+        </div>
+      ) : (
+        <CategoriesGrid />
+      )}
     </div>
   )
 }

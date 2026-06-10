@@ -51,87 +51,99 @@ export function RecentTransactionsTable({ className }: { className?: string }) {
         </Button>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center p-0">
-        <Table className="table-fixed w-full">
-          <TableBody className="border-b border-border">
-            {latestTransactions.map((transaction) => {
-              const transactionIcon = transaction.category?.icon
-              const colors = resolveColor(
-                transaction.category?.color
-                  ? (transaction.category?.color as CategoryColor)
-                  : CategoryColor.GREEN,
-              )
+        {latestTransactions.length === 0 ? (
+          <div className="flex items-center justify-center h-100">
+            <h2 className="font-medium">Nenhuma transação cadastrada</h2>
+          </div>
+        ) : (
+          <Table className="table-fixed w-full">
+            <TableBody className="border-b border-border">
+              {latestTransactions.map((transaction) => {
+                const transactionIcon = transaction.category?.icon
+                const colors = resolveColor(
+                  transaction.category?.color
+                    ? (transaction.category?.color as CategoryColor)
+                    : CategoryColor.GREEN,
+                )
 
-              const dateFormatted = transaction.createdAt
-                ? new Date(transaction.createdAt).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: '2-digit',
-                  })
-                : 'Sem data'
+                const dateFormatted = transaction.createdAt
+                  ? new Date(transaction.createdAt).toLocaleDateString(
+                      'pt-BR',
+                      {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: '2-digit',
+                      },
+                    )
+                  : 'Sem data'
 
-              const isExpense = transaction.type === TransactionType.EXPENSE
+                const isExpense = transaction.type === TransactionType.EXPENSE
 
-              const amountFormatted = new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-              }).format(Number(transaction.amount) / 100)
+                const amountFormatted = new Intl.NumberFormat('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                }).format(Number(transaction.amount) / 100)
 
-              return (
-                <TableRow key={transaction.id} className="hover:bg-transparent">
-                  <TableCell className="pl-6 w-[60%]">
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-md ${colors.lightBg}`}
-                      >
-                        {transactionIcon ? (
-                          createElement(resolveIcon(transactionIcon), {
-                            className: colors.baseText,
-                            height: 16,
-                            width: 16,
-                          })
+                return (
+                  <TableRow
+                    key={transaction.id}
+                    className="hover:bg-transparent"
+                  >
+                    <TableCell className="pl-6 w-[60%]">
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`flex h-10 w-10 items-center justify-center rounded-md ${colors.lightBg}`}
+                        >
+                          {transactionIcon ? (
+                            createElement(resolveIcon(transactionIcon), {
+                              className: colors.baseText,
+                              height: 16,
+                              width: 16,
+                            })
+                          ) : (
+                            <DollarSign />
+                          )}
+                        </div>
+
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-md font-medium text-foreground">
+                            {transaction.description}
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            {dateFormatted}
+                          </span>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="w-[20%]">
+                      <div className="flex items-center justify-center">
+                        <CategoryLabel
+                          name={transaction.category?.name ?? 'Categoria'}
+                          colors={colors}
+                        />
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="pr-6 text-right w-[20%]">
+                      <div className="flex items-center justify-end gap-2">
+                        <span className="text-sm font-semibold text-foreground">
+                          {isExpense ? '- ' : '+ '}
+                          {amountFormatted}
+                        </span>
+                        {isExpense ? (
+                          <CircleArrowDown className="text-(--red-base) w-4 h-4" />
                         ) : (
-                          <DollarSign />
+                          <CircleArrowUp className="text-(--brand-base) w-4 h-4" />
                         )}
                       </div>
-
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-md font-medium text-foreground">
-                          {transaction.description}
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          {dateFormatted}
-                        </span>
-                      </div>
-                    </div>
-                  </TableCell>
-
-                  <TableCell className="w-[20%]">
-                    <div className="flex items-center justify-center">
-                      <CategoryLabel
-                        name={transaction.category?.name ?? 'Categoria'}
-                        colors={colors}
-                      />
-                    </div>
-                  </TableCell>
-
-                  <TableCell className="pr-6 text-right w-[20%]">
-                    <div className="flex items-center justify-end gap-2">
-                      <span className="text-sm font-semibold text-foreground">
-                        {isExpense ? '- ' : '+ '}
-                        {amountFormatted}
-                      </span>
-                      {isExpense ? (
-                        <CircleArrowDown className="text-(--red-base) w-4 h-4" />
-                      ) : (
-                        <CircleArrowUp className="text-(--brand-base) w-4 h-4" />
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        )}
         <div className="flex justify-center py-5 w-full">
           <Tooltip open={isNewTransactionTooltipOpen}>
             <TooltipTrigger asChild>

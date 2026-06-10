@@ -1,7 +1,7 @@
 import { CircleArrowDown, CircleArrowUp, Wallet } from 'lucide-react'
 import { DashboardNumberCard } from './components/DashboardNumberCard'
 import { RecentTransactionsTable } from './components/RecentTransactionsTable'
-import { CategoriesStatisticsList } from './components/CategoriesSummaryList'
+import { CategoriesStatisticsList } from './components/CategoriesStatisticsList'
 import { useDashboardStore } from '@/stores/dashboard'
 import { useShallow } from 'zustand/react/shallow'
 import { useEffect } from 'react'

@@ -104,7 +104,7 @@ export const CategoriesNumberCards = () => {
         {loadingDashboard ? (
           <Skeleton className="h-8 w-40" />
         ) : (
-          (dashboardSummary?.mostUsedCategory?.category.name ?? 'Não existe')
+          (dashboardSummary?.mostUsedCategory?.category.name ?? 'Nenhuma')
         )}
       </CategoriesNumberCard>
     </div>

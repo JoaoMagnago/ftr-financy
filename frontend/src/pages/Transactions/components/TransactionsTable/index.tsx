@@ -71,6 +71,15 @@ export function TransactionsTable({ className }: { className?: string }) {
               <Skeleton key={index} className="h-10" />
             ))}
           </div>
+        ) : transactions.length === 0 ? (
+          <div className="flex flex-col gap-3 items-center justify-center h-100">
+            <h2 className="font-medium text-md">
+              Nenhuma transação cadastrada
+            </h2>
+            <p className="text-sm text-(--gray-500)">
+              Crie transações para visualizá-las nessa página
+            </p>
+          </div>
         ) : (
           <Table className="table-fixed w-full">
             <TableHeader>
@@ -202,24 +211,26 @@ export function TransactionsTable({ className }: { className?: string }) {
           onOpenChange={() => setEditingTransaction(null)}
         />
       </CardContent>
-      <CardFooter className="flex items-center justify-end px-6 py-5">
-        <div className="flex items-center gap-1 text-sm text-(--gray-700) w-full">
-          <span className="font-medium">{filters.page}</span>
-          <span>de</span>
-          <span className="font-medium">{pages}</span>
-          <span> | {totalCount} resultados</span>
-        </div>
+      {transactions.length !== 0 && (
+        <CardFooter className="flex items-center justify-end px-6 py-5">
+          <div className="flex items-center gap-1 text-sm text-(--gray-700) w-full">
+            <span className="font-medium">{filters.page}</span>
+            <span>de</span>
+            <span className="font-medium">{pages}</span>
+            <span> | {totalCount} resultados</span>
+          </div>
 
-        <CustomPagination
-          currentPage={filters.page}
-          totalPages={pages}
-          onPageChange={(page) =>
-            setFilters({
-              page,
-            })
-          }
-        />
-      </CardFooter>
+          <CustomPagination
+            currentPage={filters.page}
+            totalPages={pages}
+            onPageChange={(page) =>
+              setFilters({
+                page,
+              })
+            }
+          />
+        </CardFooter>
+      )}
     </Card>
   )
 }
