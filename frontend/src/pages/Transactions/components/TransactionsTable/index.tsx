@@ -32,6 +32,7 @@ export function TransactionsTable({ className }: { className?: string }) {
     filters,
     totalCount,
     pages,
+    page,
     setFilters,
     listTransactions,
     deleteTransaction,
@@ -43,6 +44,7 @@ export function TransactionsTable({ className }: { className?: string }) {
       filters: state.filters,
       totalCount: state.total,
       pages: state.pages,
+      page: state.page,
       setFilters: state.setFilters,
       listTransactions: state.listTransactions,
       deleteTransaction: state.deleteTransaction,
@@ -54,7 +56,13 @@ export function TransactionsTable({ className }: { className?: string }) {
   )
 
   const handleDeleteTransaction = async (id: string) => {
-    await deleteTransaction(id)
+    await deleteTransaction(id).then(() => {
+      if (transactions.length === 1 && totalCount > 0 && page > 1) {
+        setFilters({
+          page: page - 1,
+        })
+      }
+    })
     await getDashboardSummary()
   }
 
@@ -71,7 +79,7 @@ export function TransactionsTable({ className }: { className?: string }) {
               <Skeleton key={index} className="h-10" />
             ))}
           </div>
-        ) : transactions.length === 0 ? (
+        ) : totalCount === 0 ? (
           <div className="flex flex-col gap-3 items-center justify-center h-100">
             <h2 className="font-medium text-md">
               Nenhuma transação cadastrada
@@ -208,7 +216,7 @@ export function TransactionsTable({ className }: { className?: string }) {
           onOpenChange={() => setEditingTransaction(null)}
         />
       </CardContent>
-      {transactions.length !== 0 && (
+      {totalCount !== 0 && (
         <CardFooter className="flex items-center justify-end px-6 py-5">
           <div className="flex items-center gap-1 text-sm text-(--gray-700) w-full">
             <span className="font-medium">{filters.page}</span>
