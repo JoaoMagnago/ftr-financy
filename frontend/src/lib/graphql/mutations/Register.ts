@@ -1,6 +1,18 @@
-import { gql } from '@apollo/client'
+import type { AuthPayload, RegisterInput } from '@/types'
+import { gql, type TypedDocumentNode } from '@apollo/client'
 
-export const REGISTER = gql`
+type RegisterMutationData = {
+  register: AuthPayload
+}
+
+type RegisterMutationVariables = {
+  data: RegisterInput
+}
+
+export const REGISTER: TypedDocumentNode<
+  RegisterMutationData,
+  RegisterMutationVariables
+> = gql`
   mutation Register($data: RegisterInput!) {
     register(data: $data) {
       token

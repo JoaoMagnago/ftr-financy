@@ -1,6 +1,18 @@
-import { gql } from '@apollo/client'
+import type { AuthPayload, LoginInput } from '@/types'
+import { gql, type TypedDocumentNode } from '@apollo/client'
 
-export const LOGIN = gql`
+type LoginMutationData = {
+  login: AuthPayload
+}
+
+type LoginMutationVariables = {
+  data: LoginInput
+}
+
+export const LOGIN: TypedDocumentNode<
+  LoginMutationData,
+  LoginMutationVariables
+> = gql`
   mutation Login($data: LoginInput!) {
     login(data: $data) {
       token

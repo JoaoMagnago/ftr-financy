@@ -2,7 +2,6 @@ export interface User {
   id: string
   name: string
   email: string
-  role?: string
   createdAt?: string
   updatedAt?: string
 }
@@ -16,4 +15,10 @@ export interface RegisterInput {
 export interface LoginInput {
   email: string
   password: string
+}
+
+export interface AuthPayload {
+  token: string
+  refreshToken: string
+  user: User
 }

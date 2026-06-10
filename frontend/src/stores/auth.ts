@@ -5,22 +5,6 @@ import type { User, RegisterInput, LoginInput } from '@/types'
 import { LOGIN } from '../lib/graphql/mutations/Login'
 import { REGISTER } from '@/lib/graphql/mutations/Register'
 
-type RegisterMutationData = {
-  register: {
-    token: string
-    refreshToken: string
-    user: User
-  }
-}
-
-type LoginMutationData = {
-  login: {
-    token: string
-    refreshToken: string
-    user: User
-  }
-}
-
 interface AuthState {
   user: User | null
   token: string | null
@@ -38,10 +22,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       login: async (loginData: LoginInput) => {
         try {
-          const { data } = await apolloClient.mutate<
-            LoginMutationData,
-            { data: LoginInput }
-          >({
+          const { data } = await apolloClient.mutate({
             mutation: LOGIN,
             variables: {
               data: {
@@ -58,15 +39,16 @@ export const useAuthStore = create<AuthState>()(
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                role: user.role,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
               },
               token,
               isAuthenticated: true,
             })
+
             return true
           }
+
           return false
         } catch (error) {
           console.log('Erro ao fazer o login')
@@ -75,10 +57,7 @@ export const useAuthStore = create<AuthState>()(
       },
       signup: async (registerData: RegisterInput) => {
         try {
-          const { data } = await apolloClient.mutate<
-            RegisterMutationData,
-            { data: RegisterInput }
-          >({
+          const { data } = await apolloClient.mutate({
             mutation: REGISTER,
             variables: {
               data: {
@@ -88,6 +67,7 @@ export const useAuthStore = create<AuthState>()(
               },
             },
           })
+
           if (data?.register) {
             const { token, user } = data.register
             set({
@@ -95,15 +75,16 @@ export const useAuthStore = create<AuthState>()(
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                role: user.role,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
               },
               token,
               isAuthenticated: true,
             })
+
             return true
           }
+
           return false
         } catch (error) {
           console.log('Erro ao fazer o cadastro')
