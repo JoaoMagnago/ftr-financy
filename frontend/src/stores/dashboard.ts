@@ -15,13 +15,18 @@ interface DashboardState {
   loadingStatistics: boolean
   getDashboardSummary: () => Promise<void>
   getCategoriesStatistics: () => Promise<void>
+  reset: () => void
 }
 
-export const useDashboardStore = create<DashboardState>((set) => ({
+const initialState = {
   dashboardSummary: null,
   loadingDashboard: false,
   categoriesStatistics: [],
   loadingStatistics: false,
+}
+
+export const useDashboardStore = create<DashboardState>((set) => ({
+  ...initialState,
   getDashboardSummary: async () => {
     set({ loadingDashboard: true })
 
@@ -61,4 +66,5 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       set({ loadingStatistics: false })
     }
   },
+  reset: () => set(initialState),
 }))

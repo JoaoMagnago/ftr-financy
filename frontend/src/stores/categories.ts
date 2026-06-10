@@ -21,13 +21,18 @@ interface CategoriesState {
   updateCategory: (id: string, data: UpdateCategoryInput) => Promise<void>
   deleteCategory: (id: string) => Promise<void>
   listCategories: () => Promise<void>
+  reset: () => void
 }
 
-export const useCategoriesStore = create<CategoriesState>((set, get) => ({
+const initialState = {
   categories: [],
   loading: false,
   loaded: false,
   deleting: false,
+}
+
+export const useCategoriesStore = create<CategoriesState>((set, get) => ({
+  ...initialState,
   createCategory: async (categoryData) => {
     try {
       const { data } = await apolloClient.mutate({
@@ -124,4 +129,5 @@ export const useCategoriesStore = create<CategoriesState>((set, get) => ({
       set({ loading: false })
     }
   },
+  reset: () => set(initialState),
 }))

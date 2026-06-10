@@ -31,9 +31,10 @@ interface TransactionsState {
   updateTransaction: (id: string, data: UpdateTransactionInput) => Promise<void>
   deleteTransaction: (id: string) => Promise<void>
   listTransactions: (data: ListTransactionsInput) => Promise<void>
+  reset: () => void
 }
 
-export const useTransactionsStore = create<TransactionsState>((set, get) => ({
+const initialState = {
   transactions: [],
   filters: {
     page: 1,
@@ -44,6 +45,10 @@ export const useTransactionsStore = create<TransactionsState>((set, get) => ({
   page: 0,
   total: 0,
   pages: 0,
+}
+
+export const useTransactionsStore = create<TransactionsState>((set, get) => ({
+  ...initialState,
   setFilters: (newFilters) => {
     set((state) => ({
       filters: {
@@ -133,4 +138,5 @@ export const useTransactionsStore = create<TransactionsState>((set, get) => ({
       set({ loading: false })
     }
   },
+  reset: () => set(initialState),
 }))

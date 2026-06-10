@@ -10,6 +10,9 @@ import type {
 import { LOGIN } from '../lib/graphql/mutations/Login'
 import { REGISTER } from '@/lib/graphql/mutations/Register'
 import { UPDATE_PROFILE } from '@/lib/graphql/mutations/Profile'
+import { useCategoriesStore } from './categories'
+import { useTransactionsStore } from './transactions'
+import { useDashboardStore } from './dashboard'
 
 interface AuthState {
   user: User | null
@@ -100,14 +103,6 @@ export const useAuthStore = create<AuthState>()(
           throw error
         }
       },
-      logout: () => {
-        set({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-        })
-        apolloClient.clearStore()
-      },
       updateProfile: async (updateData) => {
         set({ updatingProfile: true })
 
@@ -137,6 +132,19 @@ export const useAuthStore = create<AuthState>()(
         } finally {
           set({ updatingProfile: false })
         }
+      },
+      logout: () => {
+        useCategoriesStore.getState().reset()
+        useTransactionsStore.getState().reset()
+        useDashboardStore.getState().reset()
+
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+        })
+
+        apolloClient.clearStore()
       },
     }),
     {
