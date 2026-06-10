@@ -18,15 +18,21 @@ import { useAuthStore } from '@/stores/auth'
 import { LogOut, Mail, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 
 export const Profile = () => {
-  const { logout } = useAuthStore()
   const navigate = useNavigate()
 
-  const [username, setUsername] = useState('Usuário Exemplo')
+  const { logout, user, updatingProfile, updateProfile } = useAuthStore(
+    useShallow((state) => ({
+      logout: state.logout,
+      user: state.user,
+      updatingProfile: state.updatingProfile,
+      updateProfile: state.updateProfile,
+    })),
+  )
 
-  const unsavedName = 'Usuário Exemplo'
-  const email = 'exemplo@email.com'
+  const [newUsername, setNewUsername] = useState(user?.name ?? '')
 
   const handleLogout = () => {
     logout()
@@ -37,13 +43,13 @@ export const Profile = () => {
     <div className="flex flex-col items-center">
       <Card className="w-full max-w-md rounded-xl">
         <CardHeader className="flex flex-col items-center gap-6 justify-center">
-          <Avatar name={unsavedName} size="lg" />
+          <Avatar name={user?.name} size="lg" />
           <div className="flex flex-col items-center gap-0.5">
             <CardTitle className="text-xl font-bold color-foreground">
-              {unsavedName}
+              {user?.name}
             </CardTitle>
             <CardDescription className="text-(--gray-500)">
-              {email}
+              {user?.email}
             </CardDescription>
           </div>
         </CardHeader>
@@ -54,17 +60,34 @@ export const Profile = () => {
           <form
             className="space-y-6 w-full"
             noValidate
-            // onSubmit={handleSubmit(onSubmit)}
+            onSubmit={async (e) => {
+              e.preventDefault()
+
+              console.log('submit')
+
+              await updateProfile({
+                name: newUsername,
+              })
+                .catch(() => {
+                  if (user?.name) {
+                    setNewUsername(user?.name)
+                  }
+                })
+                .then(() => {
+                  setNewUsername(newUsername)
+                })
+            }}
           >
             <div className="flex flex-col gap-2">
               <Label htmlFor="name">Nome completo</Label>
-              <InputGroup data-state={username ? 'filled' : 'empty'}>
+              <InputGroup data-state={newUsername ? 'filled' : 'empty'}>
                 <InputGroupInput
                   id="name"
                   type="text"
-                  value={username}
+                  value={newUsername}
+                  autoComplete="off"
                   placeholder="Seu nome completo"
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => setNewUsername(e.target.value)}
                 />
                 <InputGroupAddon>
                   <UserRound />
@@ -79,7 +102,7 @@ export const Profile = () => {
                   <InputGroupInput
                     id="email"
                     type="email"
-                    value={email}
+                    value={user?.email}
                     placeholder="mail@exemplo.com"
                     disabled
                   />
@@ -98,7 +121,7 @@ export const Profile = () => {
                 type="submit"
                 size="xl"
                 className="w-full"
-                // disabled={loading}
+                disabled={updatingProfile}
               >
                 Salvar alterações
               </Button>

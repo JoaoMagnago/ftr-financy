@@ -1,4 +1,8 @@
-import { LoginInput, RegisterInput } from '../dtos/input/auth.input.js'
+import {
+  LoginInput,
+  RegisterInput,
+  UpdateProfileInput,
+} from '../dtos/input/auth.input.js'
 import { UserModel } from '../models/user.model.js'
 import { prismaClient } from '../infra/database/prisma.js'
 import { comparePassword, hashPassword } from '../utils/hash.js'
@@ -11,6 +15,7 @@ export class AuthService {
         email: data.email,
       },
     })
+
     if (!existingUser) throw new Error('Usuário não cadastrado!')
 
     const compare = await comparePassword(data.password, existingUser.password)
@@ -44,5 +49,18 @@ export class AuthService {
     const token = signJwt({ id: user.id, email: user.email }, '1d')
     const refreshToken = signJwt({ id: user.id, email: user.email }, '1d')
     return { token, refreshToken, user }
+  }
+
+  async updateProfile(userId: string, data: UpdateProfileInput) {
+    const updatedUser = await prismaClient.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name: data.name.trim(),
+      },
+    })
+
+    return updatedUser
   }
 }

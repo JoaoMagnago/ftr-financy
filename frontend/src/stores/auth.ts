@@ -1,17 +1,25 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { apolloClient } from '@/lib/graphql/apollo'
-import type { User, RegisterInput, LoginInput } from '@/types'
+import type {
+  User,
+  RegisterInput,
+  LoginInput,
+  UpdateProfileInput,
+} from '@/types'
 import { LOGIN } from '../lib/graphql/mutations/Login'
 import { REGISTER } from '@/lib/graphql/mutations/Register'
+import { UPDATE_PROFILE } from '@/lib/graphql/mutations/Profile'
 
 interface AuthState {
   user: User | null
   token: string | null
   isAuthenticated: boolean
+  updatingProfile: boolean
   signup: (data: RegisterInput) => Promise<boolean>
   login: (data: LoginInput) => Promise<boolean>
   logout: () => void
+  updateProfile: (data: UpdateProfileInput) => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -20,6 +28,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      updatingProfile: false,
       login: async (loginData: LoginInput) => {
         try {
           const { data } = await apolloClient.mutate({
@@ -98,6 +107,36 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
         })
         apolloClient.clearStore()
+      },
+      updateProfile: async (updateData) => {
+        set({ updatingProfile: true })
+
+        try {
+          const { data } = await apolloClient.mutate({
+            mutation: UPDATE_PROFILE,
+            variables: {
+              data: updateData,
+            },
+          })
+
+          const updatedUser = data?.updateProfile
+
+          if (!updatedUser) return
+
+          set((state) => ({
+            user: state.user
+              ? {
+                  ...state.user,
+                  ...updatedUser,
+                }
+              : null,
+          }))
+        } catch (error) {
+          console.log('Erro ao atualizar informações do usuário')
+          throw error
+        } finally {
+          set({ updatingProfile: false })
+        }
       },
     }),
     {

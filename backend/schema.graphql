@@ -96,6 +96,7 @@ type Mutation {
   login(data: LoginInput!): LoginOutput!
   register(data: RegisterInput!): RegisterOutput!
   updateCategory(data: UpdateCategoryInput!, id: String!): CategoryModel!
+  updateProfile(data: UpdateProfileInput!): UserModel!
   updateTransaction(data: UpdateTransactionInput!, id: String!): TransactionModel!
 }
 
@@ -150,6 +151,10 @@ input UpdateCategoryInput {
   description: String
   icon: String
   name: String
+}
+
+input UpdateProfileInput {
+  name: String!
 }
 
 input UpdateTransactionInput {
